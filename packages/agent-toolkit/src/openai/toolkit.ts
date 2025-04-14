@@ -47,8 +47,7 @@ export class MondayAgentToolkit {
     const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApi, config.toolsConfiguration);
     for (const ToolClass of filteredApiTools) {
       try {
-        // Using any to bypass type checking during instantiation
-        const tool = new (ToolClass as any)(this.mondayApi);
+        const tool = new ToolClass(this.mondayApi);
         tools.push(tool);
       } catch (error) {
         console.warn(
@@ -60,7 +59,6 @@ export class MondayAgentToolkit {
     // Initialize Monday Apps tools
     for (const ToolClass of allMondayAppsTools) {
       try {
-        // Using any to bypass type checking during instantiation
         const tool = new ToolClass(this.mondayApiToken);
         tools.push(tool);
       } catch (error) {

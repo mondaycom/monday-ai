@@ -6,6 +6,8 @@ export type MondayApiToolContext = {
   boardId?: number;
 };
 
+export type MondayApiToolType = new (api: ApiClient) => BaseMondayApiTool<any>;
+
 export abstract class BaseMondayApiTool<
   Input extends ZodRawShape | undefined,
   Output extends Record<string, unknown> = never,

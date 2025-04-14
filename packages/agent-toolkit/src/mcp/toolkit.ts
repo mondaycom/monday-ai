@@ -85,8 +85,7 @@ export class MondayAgentToolkit extends McpServer {
     const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApiClient, config.toolsConfiguration);
     for (const ToolClass of filteredApiTools) {
       try {
-        // Using any to bypass type checking during instantiation
-        const tool = new (ToolClass as any)(this.mondayApiClient);
+        const tool = new ToolClass(this.mondayApiClient);
         tools.push(tool);
       } catch (error) {
         console.warn(
@@ -98,8 +97,7 @@ export class MondayAgentToolkit extends McpServer {
     // Initialize Monday Apps tools
     for (const ToolClass of allMondayAppsTools) {
       try {
-        // Using any to bypass type checking during instantiation
-        const tool = new (ToolClass as any)(this.mondayApiToken);
+        const tool = new ToolClass(this.mondayApiToken);
         tools.push(tool);
       } catch (error) {
         console.warn(
