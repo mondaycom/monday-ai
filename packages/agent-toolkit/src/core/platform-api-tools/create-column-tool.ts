@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { ToolInputType, ToolOutputType, ToolType } from '../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { createColumn } from '../../monday-graphql/queries.graphql';
-import { ColumnType, CreateColumnMutation, CreateColumnMutationVariables } from '../../monday-graphql/generated/graphql';
+import {
+  ColumnType,
+  CreateColumnMutation,
+  CreateColumnMutationVariables,
+} from '../../monday-graphql/generated/graphql';
 
 export const createColumnToolSchema = {
   columnType: z.nativeEnum(ColumnType).describe('The type of the column to be created'),

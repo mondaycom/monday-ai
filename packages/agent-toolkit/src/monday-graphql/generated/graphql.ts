@@ -17,7 +17,7 @@ export type Scalars = {
   Date: { input: any; output: any; }
   /** A multipart file */
   File: { input: any; output: any; }
-  /** An ISO 8601-encoded datetime */
+  /** An ISO 8601-encoded datetime (e.g., 2024-04-09T13:45:30Z) */
   ISO8601DateTime: { input: any; output: any; }
   /** A JSON formatted string. */
   JSON: { input: any; output: any; }
@@ -66,6 +66,46 @@ export type AccountProduct = {
   kind?: Maybe<Scalars['String']['output']>;
 };
 
+/** A role in the account */
+export type AccountRole = {
+  __typename?: 'AccountRole';
+  /** The ID of the role */
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The name of the role */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The type of the role */
+  roleType?: Maybe<Scalars['String']['output']>;
+};
+
+/** Error that occurred during activation. */
+export type ActivateUsersError = {
+  __typename?: 'ActivateUsersError';
+  /** The error code. */
+  code?: Maybe<ActivateUsersErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes for activating users. */
+export enum ActivateUsersErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UserNotFound = 'USER_NOT_FOUND'
+}
+
+/** Result of activating users. */
+export type ActivateUsersResult = {
+  __typename?: 'ActivateUsersResult';
+  /** The users that were activated. */
+  activated_users?: Maybe<Array<User>>;
+  /** Errors that occurred during activation. */
+  errors?: Maybe<Array<ActivateUsersError>>;
+};
+
 /** An activity log event */
 export type ActivityLogType = {
   __typename?: 'ActivityLogType';
@@ -77,6 +117,21 @@ export type ActivityLogType = {
   event: Scalars['String']['output'];
   id: Scalars['String']['output'];
   user_id: Scalars['String']['output'];
+};
+
+export type AppFeatureType = {
+  __typename?: 'AppFeatureType';
+  /** The app feature app id */
+  app_id?: Maybe<Scalars['ID']['output']>;
+  created_at?: Maybe<Scalars['Date']['output']>;
+  /** The data of the app feature */
+  data?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  /** The name of the app feature */
+  name?: Maybe<Scalars['String']['output']>;
+  /** The type of the app feature */
+  type?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
 };
 
 /** An app install details. */
@@ -145,6 +200,30 @@ export type AppSubscription = {
   renewal_date: Scalars['Date']['output'];
 };
 
+/** Subscription object */
+export type AppSubscriptionDetails = {
+  __typename?: 'AppSubscriptionDetails';
+  /** The ID of an account */
+  account_id: Scalars['Int']['output'];
+  /** The currency, in which the product was purchased */
+  currency: Scalars['String']['output'];
+  /** The number of days left until the subscription ends */
+  days_left: Scalars['Int']['output'];
+  discounts: Array<SubscriptionDiscount>;
+  /** The date the the inactive subscription ended. Equals to null for active subscriptions */
+  end_date?: Maybe<Scalars['String']['output']>;
+  /** The monthly price of the product purchased in the given currency, after applying discounts */
+  monthly_price: Scalars['Float']['output'];
+  period_type: SubscriptionPeriodType;
+  /** The ID of a pricing plan */
+  plan_id: Scalars['String']['output'];
+  /** The ID of a pricing version */
+  pricing_version_id: Scalars['Int']['output'];
+  /** The date the active subscription is set to renew. Equals to null for inactive subscriptions */
+  renewal_date?: Maybe<Scalars['String']['output']>;
+  status: SubscriptionStatus;
+};
+
 /** The Operations counter response for the app action. */
 export type AppSubscriptionOperationsCounter = {
   __typename?: 'AppSubscriptionOperationsCounter';
@@ -156,6 +235,42 @@ export type AppSubscriptionOperationsCounter = {
   kind: Scalars['String']['output'];
   /** Window key. */
   period_key?: Maybe<Scalars['String']['output']>;
+};
+
+export type AppSubscriptions = {
+  __typename?: 'AppSubscriptions';
+  /** The value, which identifies the exact point to continue fetching the subscriptions from */
+  cursor?: Maybe<Scalars['String']['output']>;
+  subscriptions: Array<AppSubscriptionDetails>;
+  /** Total number of subscriptions matching the given parameters */
+  total_count: Scalars['Int']['output'];
+};
+
+export type AppType = {
+  __typename?: 'AppType';
+  /** the api app id */
+  api_app_id?: Maybe<Scalars['ID']['output']>;
+  /** the api app id */
+  client_id?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['Date']['output']>;
+  /** The apps' features */
+  features?: Maybe<Array<AppFeatureType>>;
+  id: Scalars['ID']['output'];
+  /** the app kid */
+  kind?: Maybe<Scalars['String']['output']>;
+  /** the app name */
+  name?: Maybe<Scalars['String']['output']>;
+  /** the app state */
+  state?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+  /** the app user id */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+
+export type AppTypeFeaturesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** An app's version details. */
@@ -216,6 +331,46 @@ export enum AssetsSource {
   Columns = 'columns',
   /** Assets only from item's files gallery */
   Gallery = 'gallery'
+}
+
+/** Error that occurred while changing team owners. */
+export type AssignTeamOwnersError = {
+  __typename?: 'AssignTeamOwnersError';
+  /** The error code. */
+  code?: Maybe<AssignTeamOwnersErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes that can occur while changing team owners. */
+export enum AssignTeamOwnersErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UserNotFound = 'USER_NOT_FOUND',
+  UserNotMemberOfTeam = 'USER_NOT_MEMBER_OF_TEAM',
+  ViewersOrGuests = 'VIEWERS_OR_GUESTS'
+}
+
+/** Result of changing the team's ownership. */
+export type AssignTeamOwnersResult = {
+  __typename?: 'AssignTeamOwnersResult';
+  /** Errors that occurred while changing team owners. */
+  errors?: Maybe<Array<AssignTeamOwnersError>>;
+  /** The team for which the owners were changed. */
+  team?: Maybe<Team>;
+};
+
+/** The role of the user. */
+export enum BaseRoleName {
+  Admin = 'ADMIN',
+  Guest = 'GUEST',
+  Member = 'MEMBER',
+  PortalUser = 'PORTAL_USER',
+  ViewOnly = 'VIEW_ONLY'
 }
 
 /** Result of an batch operation */
@@ -288,7 +443,7 @@ export type Board = {
   /** The last time the board was updated at. */
   updated_at?: Maybe<Scalars['ISO8601DateTime']['output']>;
   /** The board's updates. */
-  updates?: Maybe<Array<Maybe<Update>>>;
+  updates?: Maybe<Array<Update>>;
   /** The Board's url */
   url: Scalars['String']['output'];
   /** The board's views. */
@@ -405,16 +560,12 @@ export enum BoardObjectType {
 
 export type BoardRelationValue = ColumnValue & {
   __typename?: 'BoardRelationValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** A string representing all the names of the linked items, separated by commas */
   display_value: Scalars['String']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The linked items IDs */
   linked_item_ids: Array<Scalars['ID']['output']>;
   /** The linked items. */
@@ -446,7 +597,7 @@ export type BoardView = {
   name: Scalars['String']['output'];
   /** The view's settings in a string form. */
   settings_str: Scalars['String']['output'];
-  /** The view's template id if it was duplictated from other */
+  /** The view's template id if it was duplicated from other view */
   source_view_id?: Maybe<Scalars['ID']['output']>;
   /** The view's type. */
   type: Scalars['String']['output'];
@@ -464,16 +615,12 @@ export enum BoardsOrderBy {
 
 export type ButtonValue = ColumnValue & {
   __typename?: 'ButtonValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The button's color in hex value. */
   color?: Maybe<Scalars['String']['output']>;
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The button's label. */
   label?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -494,16 +641,12 @@ export type ChangeTeamMembershipsResult = {
 
 export type CheckboxValue = ColumnValue & {
   __typename?: 'CheckboxValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column's boolean value. */
   checked?: Maybe<Scalars['Boolean']['output']>;
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -514,16 +657,12 @@ export type CheckboxValue = ColumnValue & {
 
 export type ColorPickerValue = ColumnValue & {
   __typename?: 'ColorPickerValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The color in hex value. */
   color?: Maybe<Scalars['String']['output']>;
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -566,6 +705,8 @@ export enum ColumnProperty {
   /** the column title. */
   Title = 'title'
 }
+
+export type ColumnSettings = DropdownColumnSettings | StatusColumnSettings;
 
 /** The columns to create. */
 export enum ColumnType {
@@ -638,7 +779,7 @@ export enum ColumnType {
   Subtasks = 'subtasks',
   /** Add tags to categorize items across multiple boards */
   Tags = 'tags',
-  /** Assign a full team to an item  */
+  /** Assign a full team to an item */
   Team = 'team',
   /** Add textual information e.g. addresses, names or keywords */
   Text = 'text',
@@ -657,14 +798,10 @@ export enum ColumnType {
 }
 
 export type ColumnValue = {
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -696,16 +833,12 @@ export type Country = {
 
 export type CountryValue = ColumnValue & {
   __typename?: 'CountryValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The country value. */
   country?: Maybe<Country>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -719,8 +852,6 @@ export type CountryValue = ColumnValue & {
 export type CreateDocBoardInput = {
   /** Column id */
   column_id: Scalars['String']['input'];
-  /** duplicate_content_from_doc_id to create doc from */
-  duplicate_content_from_doc_id?: InputMaybe<Scalars['ID']['input']>;
   /** Item id */
   item_id: Scalars['ID']['input'];
 };
@@ -741,10 +872,46 @@ export type CreateDocWorkspaceInput = {
   workspace_id: Scalars['ID']['input'];
 };
 
+export type CreateDropdownColumnSettingsInput = {
+  labels: Array<CreateDropdownLabelInput>;
+};
+
+export type CreateDropdownLabelInput = {
+  label: Scalars['String']['input'];
+};
+
+export type CreateStatusColumnSettingsInput = {
+  labels: Array<CreateStatusLabelInput>;
+};
+
+export type CreateStatusLabelInput = {
+  color: StatusColumnColors;
+  description?: InputMaybe<Scalars['String']['input']>;
+  index: Scalars['Int']['input'];
+  is_done?: InputMaybe<Scalars['Boolean']['input']>;
+  label: Scalars['String']['input'];
+};
+
+/** Attributes of the team to be created. */
+export type CreateTeamAttributesInput = {
+  /** Whether the team can contain guest users. */
+  is_guest_team?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The team's name. */
+  name: Scalars['String']['input'];
+  /** The parent team identifier. */
+  parent_team_id?: InputMaybe<Scalars['ID']['input']>;
+  /** The team members. Must not be empty, unless allow_empty_team is set. */
+  subscriber_ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
+
+/** Options for creating a team. */
+export type CreateTeamOptionsInput = {
+  /** Whether to allow a team without any subscribers. */
+  allow_empty_team?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type CreationLogValue = ColumnValue & {
   __typename?: 'CreationLogValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The date when the item was created. */
@@ -755,14 +922,60 @@ export type CreationLogValue = ColumnValue & {
   creator_id: Scalars['ID']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
 };
+
+export type CustomActivity = {
+  __typename?: 'CustomActivity';
+  color?: Maybe<CustomActivityColor>;
+  icon_id?: Maybe<CustomActivityIcon>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+export enum CustomActivityColor {
+  BrinkPink = 'BRINK_PINK',
+  CelticBlue = 'CELTIC_BLUE',
+  CornflowerBlue = 'CORNFLOWER_BLUE',
+  DingyDungeon = 'DINGY_DUNGEON',
+  GoGreen = 'GO_GREEN',
+  Gray = 'GRAY',
+  LightDeepPink = 'LIGHT_DEEP_PINK',
+  LightHotPink = 'LIGHT_HOT_PINK',
+  MayaBlue = 'MAYA_BLUE',
+  MediumTurquoise = 'MEDIUM_TURQUOISE',
+  ParadisePink = 'PARADISE_PINK',
+  PhilippineGreen = 'PHILIPPINE_GREEN',
+  PhilippineYellow = 'PHILIPPINE_YELLOW',
+  SlateBlue = 'SLATE_BLUE',
+  VividCerulean = 'VIVID_CERULEAN',
+  YankeesBlue = 'YANKEES_BLUE',
+  YellowGreen = 'YELLOW_GREEN',
+  YellowOrange = 'YELLOW_ORANGE'
+}
+
+export enum CustomActivityIcon {
+  Ascending = 'ASCENDING',
+  Camera = 'CAMERA',
+  Conference = 'CONFERENCE',
+  Flag = 'FLAG',
+  Gift = 'GIFT',
+  Headphones = 'HEADPHONES',
+  Homekeys = 'HOMEKEYS',
+  Location = 'LOCATION',
+  Notebook = 'NOTEBOOK',
+  Paperplane = 'PAPERPLANE',
+  Plane = 'PLANE',
+  Pliers = 'PLIERS',
+  Tripod = 'TRIPOD',
+  Twoflags = 'TWOFLAGS',
+  Utencils = 'UTENCILS'
+}
 
 /** The custom fields meta data for user profile. */
 export type CustomFieldMetas = {
@@ -794,10 +1007,30 @@ export type CustomFieldValue = {
   value?: Maybe<Scalars['String']['output']>;
 };
 
+/** API usage data. */
+export type DailyAnalytics = {
+  __typename?: 'DailyAnalytics';
+  /** API usage per app. */
+  by_app: Array<PlatformApiDailyAnalyticsByApp>;
+  /** API usage per day. */
+  by_day: Array<PlatformApiDailyAnalyticsByDay>;
+  /** API usage per user. */
+  by_user: Array<PlatformApiDailyAnalyticsByUser>;
+  /** Last time the API usage data was updated. */
+  last_updated?: Maybe<Scalars['ISO8601DateTime']['output']>;
+};
+
+/** Platform API daily limit. */
+export type DailyLimit = {
+  __typename?: 'DailyLimit';
+  /** Base daily limit. */
+  base?: Maybe<Scalars['Int']['output']>;
+  /** Total daily limit. */
+  total?: Maybe<Scalars['Int']['output']>;
+};
+
 export type DateValue = ColumnValue & {
   __typename?: 'DateValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's date value. */
@@ -806,8 +1039,6 @@ export type DateValue = ColumnValue & {
   icon?: Maybe<Scalars['String']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The formatted date and time in user time zone. */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's time value. */
@@ -820,18 +1051,56 @@ export type DateValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
+/** Error that occurred during deactivation. */
+export type DeactivateUsersError = {
+  __typename?: 'DeactivateUsersError';
+  /** The error code. */
+  code?: Maybe<DeactivateUsersErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes for deactivating users. */
+export enum DeactivateUsersErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UserNotFound = 'USER_NOT_FOUND'
+}
+
+/** Result of deactivating users. */
+export type DeactivateUsersResult = {
+  __typename?: 'DeactivateUsersResult';
+  /** The users that were deactivated. */
+  deactivated_users?: Maybe<Array<User>>;
+  /** Errors that occurred during deactivation. */
+  errors?: Maybe<Array<DeactivateUsersError>>;
+};
+
+export type DeleteMarketplaceAppDiscount = {
+  __typename?: 'DeleteMarketplaceAppDiscount';
+  /** Slug of an account */
+  account_slug: Scalars['String']['output'];
+  /** The id of an app */
+  app_id: Scalars['ID']['output'];
+};
+
+export type DeleteMarketplaceAppDiscountResult = {
+  __typename?: 'DeleteMarketplaceAppDiscountResult';
+  deleted_discount: DeleteMarketplaceAppDiscount;
+};
+
 export type DependencyValue = ColumnValue & {
   __typename?: 'DependencyValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** A string representing all the names of the linked items, separated by commas */
   display_value: Scalars['String']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The linked items ids */
   linked_item_ids: Array<Scalars['ID']['output']>;
   /** The linked items. */
@@ -845,6 +1114,12 @@ export type DependencyValue = ColumnValue & {
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
 };
+
+/** The period of a discount */
+export enum DiscountPeriod {
+  Monthly = 'MONTHLY',
+  Yearly = 'YEARLY'
+}
 
 /** Various documents blocks types, such as text. */
 export enum DocBlockContentType {
@@ -884,16 +1159,12 @@ export enum DocBlockContentType {
 
 export type DocValue = ColumnValue & {
   __typename?: 'DocValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The document file attached to the column. */
   file?: Maybe<FileDocValue>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -978,16 +1249,40 @@ export type DocumentBlockIdOnly = {
   id: Scalars['String']['output'];
 };
 
+export type DropdownColumnSettings = {
+  __typename?: 'DropdownColumnSettings';
+  labels?: Maybe<Array<DropdownLabel>>;
+  type?: Maybe<ManagedColumnTypes>;
+};
+
+export type DropdownLabel = {
+  __typename?: 'DropdownLabel';
+  id?: Maybe<Scalars['Int']['output']>;
+  is_deactivated?: Maybe<Scalars['Boolean']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
+export type DropdownManagedColumn = {
+  __typename?: 'DropdownManagedColumn';
+  created_at?: Maybe<Scalars['Date']['output']>;
+  created_by?: Maybe<Scalars['Int']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  revision?: Maybe<Scalars['Int']['output']>;
+  settings?: Maybe<DropdownColumnSettings>;
+  settings_json?: Maybe<Scalars['JSON']['output']>;
+  state?: Maybe<ManagedColumnState>;
+  title?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+  updated_by?: Maybe<Scalars['Int']['output']>;
+};
+
 export type DropdownValue = ColumnValue & {
   __typename?: 'DropdownValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -1015,33 +1310,14 @@ export enum DuplicateBoardType {
   DuplicateBoardWithStructure = 'duplicate_board_with_structure'
 }
 
-export type DynamicPosition = {
-  /**
-   * A boolean flag indicating the desired position of the target item: set to true
-   * to place the item after the reference object, or false to place it before.
-   */
-  is_after?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The unique identifier of the reference object relative to which the target item will be positioned. */
-  object_id: Scalars['String']['input'];
-  /**
-   * The type or category of the reference object, used to determine how the target
-   * item should be positioned in relation to it.
-   */
-  object_type: ObjectType;
-};
-
 export type EmailValue = ColumnValue & {
   __typename?: 'EmailValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's email value. */
   email?: Maybe<Scalars['String']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The column's text value. It can be the same as email when user didn't enter any text. */
   label?: Maybe<Scalars['String']['output']>;
   /** Text representation of the column value. Note: Not all columns support textual value */
@@ -1166,16 +1442,12 @@ export enum FileLinkValueKind {
 
 export type FileValue = ColumnValue & {
   __typename?: 'FileValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The files attached to the column. */
   files: Array<FileValueItem>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -1287,20 +1559,51 @@ export enum FolderFontWeight {
 
 export type FormulaValue = ColumnValue & {
   __typename?: 'FormulaValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
+  /** A string representing all the formula values, separated by commas */
+  display_value: Scalars['String']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type GrantMarketplaceAppDiscount = {
+  __typename?: 'GrantMarketplaceAppDiscount';
+  /** The id of an app */
+  app_id: Scalars['ID']['output'];
+  /** List of app plan ids */
+  app_plan_ids: Array<Scalars['String']['output']>;
+  /** Number of days a discount will be valid */
+  days_valid: Scalars['Int']['output'];
+  /** Percentage value of a discount */
+  discount: Scalars['Int']['output'];
+  /** Is discount recurring */
+  is_recurring: Scalars['Boolean']['output'];
+  period?: Maybe<DiscountPeriod>;
+};
+
+export type GrantMarketplaceAppDiscountData = {
+  /** List of app plan ids */
+  app_plan_ids: Array<Scalars['String']['input']>;
+  /** Number of days a discount will be valid */
+  days_valid: Scalars['Int']['input'];
+  /** Percentage value of a discount */
+  discount: Scalars['Int']['input'];
+  /** Is discount recurring */
+  is_recurring: Scalars['Boolean']['input'];
+  /** The period of a discount */
+  period?: InputMaybe<DiscountPeriod>;
+};
+
+export type GrantMarketplaceAppDiscountResult = {
+  __typename?: 'GrantMarketplaceAppDiscountResult';
+  granted_discount: GrantMarketplaceAppDiscount;
 };
 
 /** A group of items in a board. */
@@ -1346,8 +1649,6 @@ export enum GroupAttributes {
 
 export type GroupValue = ColumnValue & {
   __typename?: 'GroupValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The group value. */
@@ -1356,8 +1657,6 @@ export type GroupValue = ColumnValue & {
   group_id?: Maybe<Scalars['ID']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -1368,16 +1667,12 @@ export type GroupValue = ColumnValue & {
 
 export type HourValue = ColumnValue & {
   __typename?: 'HourValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** Hour */
   hour?: Maybe<Scalars['Int']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Minute */
   minute?: Maybe<Scalars['Int']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -1391,8 +1686,6 @@ export type HourValue = ColumnValue & {
 
 export type IntegrationValue = ColumnValue & {
   __typename?: 'IntegrationValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** ID of the entity */
@@ -1403,14 +1696,37 @@ export type IntegrationValue = ColumnValue & {
   issue_api_url?: Maybe<Scalars['ID']['output']>;
   /** ID of the issue */
   issue_id?: Maybe<Scalars['String']['output']>;
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
+};
+
+/** Error that occurred while inviting users */
+export type InviteUsersError = {
+  __typename?: 'InviteUsersError';
+  /** The error code. */
+  code?: Maybe<InviteUsersErrorCode>;
+  /** The email address for the user that caused the error. */
+  email?: Maybe<Scalars['ID']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/** Error codes that can occur while changing email domain. */
+export enum InviteUsersErrorCode {
+  Error = 'ERROR'
+}
+
+/** Result of inviting users to the account. */
+export type InviteUsersResult = {
+  __typename?: 'InviteUsersResult';
+  /** Errors that occurred while inviting users */
+  errors?: Maybe<Array<InviteUsersError>>;
+  /** The users that were successfully invited. */
+  invited_users?: Maybe<Array<User>>;
 };
 
 /** An item (table row). */
@@ -1451,7 +1767,7 @@ export type Item = {
   /** The item's last update date. */
   updated_at?: Maybe<Scalars['Date']['output']>;
   /** The item's updates. */
-  updates?: Maybe<Array<Maybe<Update>>>;
+  updates?: Maybe<Array<Update>>;
   /** The item's link */
   url: Scalars['String']['output'];
 };
@@ -1487,8 +1803,6 @@ export type ItemUpdatesArgs = {
 
 export type ItemIdValue = ColumnValue & {
   __typename?: 'ItemIdValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
@@ -1590,7 +1904,7 @@ export enum ItemsQueryRuleOperator {
   StartsWith = 'starts_with',
   /** Within the last */
   WithinTheLast = 'within_the_last',
-  /** Within the next  */
+  /** Within the next */
   WithinTheNext = 'within_the_next'
 }
 
@@ -1616,14 +1930,10 @@ export enum Kind {
 
 export type LastUpdatedValue = ColumnValue & {
   __typename?: 'LastUpdatedValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -1637,16 +1947,22 @@ export type LastUpdatedValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
+export type Like = {
+  __typename?: 'Like';
+  created_at?: Maybe<Scalars['Date']['output']>;
+  creator?: Maybe<User>;
+  creator_id?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  reaction_type?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+};
+
 export type LinkValue = ColumnValue & {
   __typename?: 'LinkValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -1664,8 +1980,6 @@ export type LocationValue = ColumnValue & {
   __typename?: 'LocationValue';
   /** Address */
   address?: Maybe<Scalars['String']['output']>;
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** City */
   city?: Maybe<Scalars['String']['output']>;
   /** City */
@@ -1678,8 +1992,6 @@ export type LocationValue = ColumnValue & {
   country_short?: Maybe<Scalars['String']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Latitude */
   lat?: Maybe<Scalars['Float']['output']>;
   /** Longitude */
@@ -1705,14 +2017,10 @@ export type LocationValue = ColumnValue & {
 
 export type LongTextValue = ColumnValue & {
   __typename?: 'LongTextValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -1723,18 +2031,59 @@ export type LongTextValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
+export type ManagedColumn = {
+  __typename?: 'ManagedColumn';
+  created_at?: Maybe<Scalars['Date']['output']>;
+  created_by?: Maybe<Scalars['Int']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  revision?: Maybe<Scalars['Int']['output']>;
+  settings?: Maybe<ColumnSettings>;
+  settings_json?: Maybe<Scalars['JSON']['output']>;
+  state?: Maybe<ManagedColumnState>;
+  title?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+  updated_by?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum ManagedColumnState {
+  Active = 'active',
+  Deleted = 'deleted',
+  Inactive = 'inactive'
+}
+
+export enum ManagedColumnTypes {
+  Dropdown = 'dropdown',
+  Status = 'status'
+}
+
+export type MarketplaceAppDiscount = {
+  __typename?: 'MarketplaceAppDiscount';
+  /** The ID of an account */
+  account_id: Scalars['ID']['output'];
+  /** Slug of an account */
+  account_slug: Scalars['String']['output'];
+  /** List of app plan ids */
+  app_plan_ids: Array<Scalars['String']['output']>;
+  /** Date when a discount was created */
+  created_at: Scalars['String']['output'];
+  /** Percentage value of a discount */
+  discount: Scalars['Int']['output'];
+  /** Is discount recurring */
+  is_recurring: Scalars['Boolean']['output'];
+  period?: Maybe<DiscountPeriod>;
+  /** Date until a discount is valid */
+  valid_until: Scalars['String']['output'];
+};
+
 export type MirrorValue = ColumnValue & {
   __typename?: 'MirrorValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** A string representing all the names of the linked items, separated by commas */
   display_value: Scalars['String']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The mirrored items. */
   mirrored_items: Array<MirroredItem>;
   /** Text representation of the column value. Note: Not all columns support textual value */
@@ -1763,6 +2112,10 @@ export type MirroredValue = Board | BoardRelationValue | ButtonValue | CheckboxV
 /** Update your monday.com data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Activate managed column mutation. */
+  activate_managed_column?: Maybe<ManagedColumn>;
+  /** Activates the specified users. */
+  activate_users?: Maybe<ActivateUsersResult>;
   /** Add a file to a column value. */
   add_file_to_column?: Maybe<Asset>;
   /** Add a file to an update. */
@@ -1788,6 +2141,8 @@ export type Mutation = {
   archive_group?: Maybe<Group>;
   /** Archive an item. */
   archive_item?: Maybe<Item>;
+  /** Assigns the specified users as owners of the specified team. */
+  assign_team_owners?: Maybe<AssignTeamOwnersResult>;
   /** Extends trial period of an application to selected accounts */
   batch_extend_trial_period?: Maybe<BatchExtendTrialPeriod>;
   /** Change a column's properties */
@@ -1808,10 +2163,13 @@ export type Mutation = {
   create_board?: Maybe<Board>;
   /** Create a new column in board. */
   create_column?: Maybe<Column>;
+  create_custom_activity?: Maybe<CustomActivity>;
   /** Create a new doc. */
   create_doc?: Maybe<Document>;
   /** Create new document block */
   create_doc_block?: Maybe<DocumentBlock>;
+  /** Create managed column of type dropdown mutation. */
+  create_dropdown_managed_column?: Maybe<DropdownManagedColumn>;
   /** Creates a folder in a specific workspace. */
   create_folder?: Maybe<Folder>;
   /** Creates a new group in a specific board. */
@@ -1822,18 +2180,28 @@ export type Mutation = {
   create_notification?: Maybe<Notification>;
   /** Create a new tag or get it if it already exists. */
   create_or_get_tag?: Maybe<Tag>;
+  /** Create managed column of type status mutation. */
+  create_status_managed_column?: Maybe<StatusManagedColumn>;
   /** Create subitem. */
   create_subitem?: Maybe<Item>;
+  /** Creates a new team. */
+  create_team?: Maybe<Team>;
+  create_timeline_item?: Maybe<TimelineItem>;
   /** Create a new update. */
   create_update?: Maybe<Update>;
   /** Create a new webhook. */
   create_webhook?: Maybe<Webhook>;
   /** Create a new workspace. */
   create_workspace?: Maybe<Workspace>;
+  /** Deactivate managed column mutation. */
+  deactivate_managed_column?: Maybe<ManagedColumn>;
+  /** Deactivates the specified users. */
+  deactivate_users?: Maybe<DeactivateUsersResult>;
   /** Delete a board. */
   delete_board?: Maybe<Board>;
   /** Delete a column. */
   delete_column?: Maybe<Column>;
+  delete_custom_activity?: Maybe<CustomActivity>;
   /** Delete a document block */
   delete_doc_block?: Maybe<DocumentBlockIdOnly>;
   /** Deletes a folder in a specific workspace. */
@@ -1842,12 +2210,18 @@ export type Mutation = {
   delete_group?: Maybe<Group>;
   /** Delete an item. */
   delete_item?: Maybe<Item>;
+  /** Delete managed column mutation. */
+  delete_managed_column?: Maybe<ManagedColumn>;
+  delete_marketplace_app_discount: DeleteMarketplaceAppDiscountResult;
   /** Remove subscribers from the board. */
   delete_subscribers_from_board?: Maybe<Array<Maybe<User>>>;
+  /** Deletes the specified team. */
+  delete_team?: Maybe<Team>;
   /** Remove team subscribers from the board. */
   delete_teams_from_board?: Maybe<Array<Maybe<Team>>>;
   /** Delete teams from a workspace. */
   delete_teams_from_workspace?: Maybe<Array<Maybe<Team>>>;
+  delete_timeline_item?: Maybe<TimelineItem>;
   /** Delete an update. */
   delete_update?: Maybe<Update>;
   /** Delete users from a workspace. */
@@ -1862,34 +2236,65 @@ export type Mutation = {
   duplicate_group?: Maybe<Group>;
   /** Duplicate an item. */
   duplicate_item?: Maybe<Item>;
+  edit_update: Update;
+  grant_marketplace_app_discount: GrantMarketplaceAppDiscountResult;
   /** Increase operations counter */
   increase_app_subscription_operations?: Maybe<AppSubscriptionOperationsCounter>;
+  /** Invite users to the account. */
+  invite_users?: Maybe<InviteUsersResult>;
   /** Like an update. */
   like_update?: Maybe<Update>;
   /** Move an item to a different board. */
   move_item_to_board?: Maybe<Item>;
   /** Move an item to a different group. */
   move_item_to_group?: Maybe<Item>;
+  pin_to_top: Update;
   /** Remove mock app subscription for the current account */
   remove_mock_app_subscription?: Maybe<AppSubscription>;
+  /** Removes the specified users as owners of the specified team. */
+  remove_team_owners?: Maybe<RemoveTeamOwnersResult>;
   /** Remove users from team. */
   remove_users_from_team?: Maybe<ChangeTeamMembershipsResult>;
   /** Set mock app subscription for the current account */
   set_mock_app_subscription?: Maybe<AppSubscription>;
+  unlike_update: Update;
+  unpin_from_top: Update;
   /** Update item column value by existing assets */
   update_assets_on_item?: Maybe<Item>;
   /** Update Board attribute. */
   update_board?: Maybe<Scalars['JSON']['output']>;
   /** Update a document block */
   update_doc_block?: Maybe<DocumentBlock>;
+  /** Update managed column of type dropdown mutation. */
+  update_dropdown_managed_column?: Maybe<DropdownManagedColumn>;
+  /** Updates the email domain for the specified users. */
+  update_email_domain?: Maybe<UpdateEmailDomainResult>;
   /** Updates a folder. */
   update_folder?: Maybe<Folder>;
   /** Update an existing group. */
   update_group?: Maybe<Group>;
+  /** Updates attributes for users. */
+  update_multiple_users?: Maybe<UpdateUserAttributesResult>;
+  /** Update managed column of type status mutation. */
+  update_status_managed_column?: Maybe<StatusManagedColumn>;
+  /** Updates the role of the specified users. */
+  update_users_role?: Maybe<UpdateUsersRoleResult>;
   /** Update an existing workspace. */
   update_workspace?: Maybe<Workspace>;
   /** Use a template */
   use_template?: Maybe<Template>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationActivate_Managed_ColumnArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationActivate_UsersArgs = {
+  user_ids: Array<Scalars['ID']['input']>;
 };
 
 
@@ -1971,6 +2376,13 @@ export type MutationArchive_GroupArgs = {
 /** Update your monday.com data. */
 export type MutationArchive_ItemArgs = {
   item_id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationAssign_Team_OwnersArgs = {
+  team_id: Scalars['ID']['input'];
+  user_ids: Array<Scalars['ID']['input']>;
 };
 
 
@@ -2064,6 +2476,14 @@ export type MutationCreate_ColumnArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationCreate_Custom_ActivityArgs = {
+  color: CustomActivityColor;
+  icon_id: CustomActivityIcon;
+  name: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
 export type MutationCreate_DocArgs = {
   location: CreateDocInput;
 };
@@ -2080,10 +2500,17 @@ export type MutationCreate_Doc_BlockArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationCreate_Dropdown_Managed_ColumnArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  settings?: InputMaybe<CreateDropdownColumnSettingsInput>;
+  title: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
 export type MutationCreate_FolderArgs = {
   color?: InputMaybe<FolderColor>;
   custom_icon?: InputMaybe<FolderCustomIcon>;
-  dynamic_position?: InputMaybe<DynamicPosition>;
   font_weight?: InputMaybe<FolderFontWeight>;
   name: Scalars['String']['input'];
   parent_folder_id?: InputMaybe<Scalars['ID']['input']>;
@@ -2131,11 +2558,42 @@ export type MutationCreate_Or_Get_TagArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationCreate_Status_Managed_ColumnArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  settings?: InputMaybe<CreateStatusColumnSettingsInput>;
+  title: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
 export type MutationCreate_SubitemArgs = {
   column_values?: InputMaybe<Scalars['JSON']['input']>;
   create_labels_if_missing?: InputMaybe<Scalars['Boolean']['input']>;
   item_name: Scalars['String']['input'];
   parent_item_id: Scalars['ID']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationCreate_TeamArgs = {
+  input: CreateTeamAttributesInput;
+  options?: InputMaybe<CreateTeamOptionsInput>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationCreate_Timeline_ItemArgs = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  custom_activity_id: Scalars['String']['input'];
+  item_id: Scalars['ID']['input'];
+  location?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  time_range?: InputMaybe<TimelineItemTimeRange>;
+  timestamp: Scalars['ISO8601DateTime']['input'];
+  title: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -2165,6 +2623,18 @@ export type MutationCreate_WorkspaceArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationDeactivate_Managed_ColumnArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationDeactivate_UsersArgs = {
+  user_ids: Array<Scalars['ID']['input']>;
+};
+
+
+/** Update your monday.com data. */
 export type MutationDelete_BoardArgs = {
   board_id: Scalars['ID']['input'];
 };
@@ -2174,6 +2644,12 @@ export type MutationDelete_BoardArgs = {
 export type MutationDelete_ColumnArgs = {
   board_id: Scalars['ID']['input'];
   column_id: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationDelete_Custom_ActivityArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -2203,9 +2679,28 @@ export type MutationDelete_ItemArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationDelete_Managed_ColumnArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationDelete_Marketplace_App_DiscountArgs = {
+  account_slug: Scalars['String']['input'];
+  app_id: Scalars['ID']['input'];
+};
+
+
+/** Update your monday.com data. */
 export type MutationDelete_Subscribers_From_BoardArgs = {
   board_id: Scalars['ID']['input'];
   user_ids: Array<Scalars['ID']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationDelete_TeamArgs = {
+  team_id: Scalars['ID']['input'];
 };
 
 
@@ -2220,6 +2715,12 @@ export type MutationDelete_Teams_From_BoardArgs = {
 export type MutationDelete_Teams_From_WorkspaceArgs = {
   team_ids: Array<Scalars['ID']['input']>;
   workspace_id: Scalars['ID']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationDelete_Timeline_ItemArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -2277,6 +2778,21 @@ export type MutationDuplicate_ItemArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationEdit_UpdateArgs = {
+  body: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationGrant_Marketplace_App_DiscountArgs = {
+  account_slug: Scalars['String']['input'];
+  app_id: Scalars['ID']['input'];
+  data: GrantMarketplaceAppDiscountData;
+};
+
+
+/** Update your monday.com data. */
 export type MutationIncrease_App_Subscription_OperationsArgs = {
   increment_by?: InputMaybe<Scalars['Int']['input']>;
   kind?: InputMaybe<Scalars['String']['input']>;
@@ -2284,8 +2800,16 @@ export type MutationIncrease_App_Subscription_OperationsArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationInvite_UsersArgs = {
+  emails: Array<Scalars['String']['input']>;
+  product?: InputMaybe<Product>;
+  user_role?: InputMaybe<UserRole>;
+};
+
+
+/** Update your monday.com data. */
 export type MutationLike_UpdateArgs = {
-  update_id?: InputMaybe<Scalars['ID']['input']>;
+  update_id: Scalars['ID']['input'];
 };
 
 
@@ -2307,9 +2831,23 @@ export type MutationMove_Item_To_GroupArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationPin_To_TopArgs = {
+  id: Scalars['ID']['input'];
+  item_id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+/** Update your monday.com data. */
 export type MutationRemove_Mock_App_SubscriptionArgs = {
   app_id: Scalars['ID']['input'];
   partial_signing_secret: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationRemove_Team_OwnersArgs = {
+  team_id: Scalars['ID']['input'];
+  user_ids: Array<Scalars['ID']['input']>;
 };
 
 
@@ -2330,6 +2868,19 @@ export type MutationSet_Mock_App_SubscriptionArgs = {
   plan_id?: InputMaybe<Scalars['String']['input']>;
   pricing_version?: InputMaybe<Scalars['Int']['input']>;
   renewal_date?: InputMaybe<Scalars['Date']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationUnlike_UpdateArgs = {
+  update_id: Scalars['ID']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationUnpin_From_TopArgs = {
+  id: Scalars['ID']['input'];
+  item_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -2358,6 +2909,22 @@ export type MutationUpdate_Doc_BlockArgs = {
 
 
 /** Update your monday.com data. */
+export type MutationUpdate_Dropdown_Managed_ColumnArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  revision: Scalars['Int']['input'];
+  settings?: InputMaybe<UpdateDropdownColumnSettingsInput>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationUpdate_Email_DomainArgs = {
+  input: UpdateEmailDomainAttributesInput;
+};
+
+
+/** Update your monday.com data. */
 export type MutationUpdate_FolderArgs = {
   color?: InputMaybe<FolderColor>;
   custom_icon?: InputMaybe<FolderCustomIcon>;
@@ -2374,6 +2941,31 @@ export type MutationUpdate_GroupArgs = {
   group_attribute: GroupAttributes;
   group_id: Scalars['String']['input'];
   new_value: Scalars['String']['input'];
+};
+
+
+/** Update your monday.com data. */
+export type MutationUpdate_Multiple_UsersArgs = {
+  bypass_confirmation_for_claimed_domains?: InputMaybe<Scalars['Boolean']['input']>;
+  user_updates: Array<UserUpdateInput>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationUpdate_Status_Managed_ColumnArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  revision: Scalars['Int']['input'];
+  settings?: InputMaybe<UpdateStatusColumnSettingsInput>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationUpdate_Users_RoleArgs = {
+  new_role?: InputMaybe<BaseRoleName>;
+  role_id?: InputMaybe<Scalars['ID']['input']>;
+  user_ids: Array<Scalars['ID']['input']>;
 };
 
 
@@ -2428,16 +3020,12 @@ export enum NumberValueUnitDirection {
 
 export type NumbersValue = ColumnValue & {
   __typename?: 'NumbersValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** Indicates where the symbol should be placed - on the right or left of the number */
   direction?: Maybe<NumberValueUnitDirection>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Number */
   number?: Maybe<Scalars['Float']['output']>;
   /** The symbol of the unit */
@@ -2448,16 +3036,6 @@ export type NumbersValue = ColumnValue & {
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
 };
-
-/** Represents a monday object. */
-export enum ObjectType {
-  /** Represents a board object type. */
-  Board = 'Board',
-  /** Represents a folder object type. */
-  Folder = 'Folder',
-  /** Represents an overview object type. */
-  Overview = 'Overview'
-}
 
 /** The working status of a user. */
 export type OutOfOffice = {
@@ -2484,14 +3062,10 @@ export type PeopleEntity = {
 
 export type PeopleValue = ColumnValue & {
   __typename?: 'PeopleValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The people and teams assigned to the item. */
   persons_and_teams?: Maybe<Array<PeopleEntity>>;
   text?: Maybe<Scalars['String']['output']>;
@@ -2505,14 +3079,10 @@ export type PeopleValue = ColumnValue & {
 
 export type PersonValue = ColumnValue & {
   __typename?: 'PersonValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The person assigned to the item. */
   person_id?: Maybe<Scalars['ID']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -2526,16 +3096,12 @@ export type PersonValue = ColumnValue & {
 
 export type PhoneValue = ColumnValue & {
   __typename?: 'PhoneValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** ISO-2 country code */
   country_short_name?: Maybe<Scalars['String']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Phone number */
   phone?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -2560,6 +3126,44 @@ export type Plan = {
   version: Scalars['Int']['output'];
 };
 
+/** The Platform API's data. */
+export type PlatformApi = {
+  __typename?: 'PlatformApi';
+  /** API analytics. */
+  daily_analytics?: Maybe<DailyAnalytics>;
+  /** Platform API daily limit. */
+  daily_limit?: Maybe<DailyLimit>;
+};
+
+/** API usage per app. */
+export type PlatformApiDailyAnalyticsByApp = {
+  __typename?: 'PlatformApiDailyAnalyticsByApp';
+  /** API app id */
+  api_app_id: Scalars['ID']['output'];
+  /** Application. */
+  app?: Maybe<AppType>;
+  /** API usage for the app. */
+  usage: Scalars['Int']['output'];
+};
+
+/** API usage per day. */
+export type PlatformApiDailyAnalyticsByDay = {
+  __typename?: 'PlatformApiDailyAnalyticsByDay';
+  /** Day. */
+  day: Scalars['String']['output'];
+  /** API usage for the day. */
+  usage: Scalars['Int']['output'];
+};
+
+/** API usage per user. */
+export type PlatformApiDailyAnalyticsByUser = {
+  __typename?: 'PlatformApiDailyAnalyticsByUser';
+  /** API usage for the user. */
+  usage: Scalars['Int']['output'];
+  /** User. */
+  user: User;
+};
+
 /** The position relative method. */
 export enum PositionRelative {
   /** position after at the given entity. */
@@ -2568,16 +3172,24 @@ export enum PositionRelative {
   BeforeAt = 'before_at'
 }
 
+/** The product to invite the users to. */
+export enum Product {
+  Crm = 'crm',
+  Dev = 'dev',
+  Forms = 'forms',
+  Knowledge = 'knowledge',
+  Service = 'service',
+  Whiteboard = 'whiteboard',
+  WorkManagement = 'work_management',
+  Workflows = 'workflows'
+}
+
 export type ProgressValue = ColumnValue & {
   __typename?: 'ProgressValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -2591,12 +3203,17 @@ export type Query = {
   __typename?: 'Query';
   /** Get the connected account's information. */
   account?: Maybe<Account>;
+  /** Get all roles for the account */
+  account_roles?: Maybe<Array<AccountRole>>;
+  /** Get an app by ID. */
+  app?: Maybe<AppType>;
   /** Get a collection of installs of an app. */
   app_installs?: Maybe<Array<Maybe<AppInstall>>>;
   /** Get the current app subscription. Note: This query does not work in the playground */
   app_subscription?: Maybe<Array<Maybe<AppSubscription>>>;
   /** Get operations counter current value */
   app_subscription_operations?: Maybe<AppSubscriptionOperationsCounter>;
+  app_subscriptions: AppSubscriptions;
   /** Get apps monetization information for an account */
   apps_monetization_info?: Maybe<AppsMonetizationInfo>;
   /** Get apps monetization status for an account */
@@ -2607,6 +3224,7 @@ export type Query = {
   boards?: Maybe<Array<Maybe<Board>>>;
   /** Get the complexity data of your queries. */
   complexity?: Maybe<Complexity>;
+  custom_activity?: Maybe<Array<CustomActivity>>;
   /** Get a collection of docs. */
   docs?: Maybe<Array<Maybe<Document>>>;
   /** Get a collection of folders. Note: This query won't return folders from closed workspaces to which you are not subscribed */
@@ -2615,26 +3233,40 @@ export type Query = {
   items?: Maybe<Array<Maybe<Item>>>;
   /** Search items by multiple columns and values. */
   items_page_by_column_values: ItemsResponse;
+  /** Get managed column data. */
+  managed_column?: Maybe<Array<ManagedColumn>>;
+  marketplace_app_discounts: Array<MarketplaceAppDiscount>;
   /** Get the connected user's information. */
   me?: Maybe<User>;
   /** Get next pages of board's items (rows) by cursor. */
   next_items_page: ItemsResponse;
+  /** Platform API data. */
+  platform_api?: Maybe<PlatformApi>;
   /** Get a collection of tags. */
   tags?: Maybe<Array<Maybe<Tag>>>;
   /** Get a collection of teams. */
   teams?: Maybe<Array<Maybe<Team>>>;
+  /** Fetches timeline items for a given item */
+  timeline?: Maybe<TimelineResponse>;
+  timeline_item?: Maybe<TimelineItem>;
   /** Get a collection of updates. */
-  updates?: Maybe<Array<Maybe<Update>>>;
+  updates?: Maybe<Array<Update>>;
   /** Get a collection of users. */
   users?: Maybe<Array<Maybe<User>>>;
   /** Get the API version in use */
   version: Version;
   /** Get a list containing the versions of the API */
-  versions: Array<Version>;
+  versions?: Maybe<Array<Version>>;
   /** Get a collection of webhooks for the board */
   webhooks?: Maybe<Array<Maybe<Webhook>>>;
   /** Get a collection of workspaces. */
   workspaces?: Maybe<Array<Maybe<Workspace>>>;
+};
+
+
+/** Get your data from monday.com */
+export type QueryAppArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -2654,6 +3286,16 @@ export type QueryApp_Subscription_OperationsArgs = {
 
 
 /** Get your data from monday.com */
+export type QueryApp_SubscriptionsArgs = {
+  account_id?: InputMaybe<Scalars['Int']['input']>;
+  app_id: Scalars['ID']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<SubscriptionStatus>;
+};
+
+
+/** Get your data from monday.com */
 export type QueryAssetsArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
@@ -2669,6 +3311,15 @@ export type QueryBoardsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   state?: InputMaybe<State>;
   workspace_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+};
+
+
+/** Get your data from monday.com */
+export type QueryCustom_ActivityArgs = {
+  color?: InputMaybe<CustomActivityColor>;
+  icon_id?: InputMaybe<CustomActivityIcon>;
+  ids?: InputMaybe<Array<Scalars['String']['input']>>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2712,6 +3363,19 @@ export type QueryItems_Page_By_Column_ValuesArgs = {
 
 
 /** Get your data from monday.com */
+export type QueryManaged_ColumnArgs = {
+  id?: InputMaybe<Array<Scalars['String']['input']>>;
+  state?: InputMaybe<Array<ManagedColumnState>>;
+};
+
+
+/** Get your data from monday.com */
+export type QueryMarketplace_App_DiscountsArgs = {
+  app_id: Scalars['ID']['input'];
+};
+
+
+/** Get your data from monday.com */
 export type QueryNext_Items_PageArgs = {
   cursor: Scalars['String']['input'];
   limit?: Scalars['Int']['input'];
@@ -2727,6 +3391,18 @@ export type QueryTagsArgs = {
 /** Get your data from monday.com */
 export type QueryTeamsArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
+
+
+/** Get your data from monday.com */
+export type QueryTimelineArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** Get your data from monday.com */
+export type QueryTimeline_ItemArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -2770,14 +3446,10 @@ export type QueryWorkspacesArgs = {
 
 export type RatingValue = ColumnValue & {
   __typename?: 'RatingValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Rating value */
   rating?: Maybe<Scalars['Int']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -2787,6 +3459,37 @@ export type RatingValue = ColumnValue & {
   updated_at?: Maybe<Scalars['Date']['output']>;
   /** The column's raw value in JSON format. */
   value?: Maybe<Scalars['JSON']['output']>;
+};
+
+/** Error that occurred while removing team owners. */
+export type RemoveTeamOwnersError = {
+  __typename?: 'RemoveTeamOwnersError';
+  /** The error code. */
+  code?: Maybe<RemoveTeamOwnersErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes that can occur while removing team owners. */
+export enum RemoveTeamOwnersErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UserNotFound = 'USER_NOT_FOUND',
+  UserNotMemberOfTeam = 'USER_NOT_MEMBER_OF_TEAM',
+  ViewersOrGuests = 'VIEWERS_OR_GUESTS'
+}
+
+/** Result of removing the team's ownership. */
+export type RemoveTeamOwnersResult = {
+  __typename?: 'RemoveTeamOwnersResult';
+  /** Errors that occurred while removing team owners. */
+  errors?: Maybe<Array<RemoveTeamOwnersError>>;
+  /** The team for which the owners were removed. */
+  team?: Maybe<Team>;
 };
 
 /** A reply for an update. */
@@ -2800,12 +3503,24 @@ export type Reply = {
   creator?: Maybe<User>;
   /** The unique identifier of the reply creator. */
   creator_id?: Maybe<Scalars['String']['output']>;
+  edited_at: Scalars['Date']['output'];
   /** The reply's unique identifier. */
   id: Scalars['ID']['output'];
+  kind: Scalars['String']['output'];
+  likes: Array<Like>;
+  pinned_to_top: Array<UpdatePin>;
   /** The reply's text body. */
   text_body?: Maybe<Scalars['String']['output']>;
   /** The reply's last edit date. */
   updated_at?: Maybe<Scalars['Date']['output']>;
+  viewers: Array<Watcher>;
+};
+
+
+/** A reply for an update. */
+export type ReplyViewersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** The possible states for a board or item. */
@@ -2820,6 +3535,66 @@ export enum State {
   Deleted = 'deleted'
 }
 
+export enum StatusColumnColors {
+  AmericanGray = 'american_gray',
+  Aquamarine = 'aquamarine',
+  Berry = 'berry',
+  Blackish = 'blackish',
+  BrightBlue = 'bright_blue',
+  BrightGreen = 'bright_green',
+  Brown = 'brown',
+  Bubble = 'bubble',
+  ChiliBlue = 'chili_blue',
+  Coffee = 'coffee',
+  DarkBlue = 'dark_blue',
+  DarkIndigo = 'dark_indigo',
+  DarkOrange = 'dark_orange',
+  DarkPurple = 'dark_purple',
+  DarkRed = 'dark_red',
+  DoneGreen = 'done_green',
+  EggYolk = 'egg_yolk',
+  Explosive = 'explosive',
+  GrassGreen = 'grass_green',
+  Indigo = 'indigo',
+  Lavender = 'lavender',
+  Lilac = 'lilac',
+  Lipstick = 'lipstick',
+  Navy = 'navy',
+  Orchid = 'orchid',
+  Peach = 'peach',
+  Pecan = 'pecan',
+  Purple = 'purple',
+  River = 'river',
+  Royal = 'royal',
+  Saladish = 'saladish',
+  Sky = 'sky',
+  SofiaPink = 'sofia_pink',
+  Steel = 'steel',
+  StuckRed = 'stuck_red',
+  Sunset = 'sunset',
+  Tan = 'tan',
+  Teal = 'teal',
+  Winter = 'winter',
+  WorkingOrange = 'working_orange'
+}
+
+export type StatusColumnSettings = {
+  __typename?: 'StatusColumnSettings';
+  labels?: Maybe<Array<StatusLabel>>;
+  type?: Maybe<ManagedColumnTypes>;
+};
+
+export type StatusLabel = {
+  __typename?: 'StatusLabel';
+  color?: Maybe<StatusColumnColors>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
+  is_deactivated?: Maybe<Scalars['Boolean']['output']>;
+  is_done?: Maybe<Scalars['Boolean']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
 /** A status label style. */
 export type StatusLabelStyle = {
   __typename?: 'StatusLabelStyle';
@@ -2829,10 +3604,23 @@ export type StatusLabelStyle = {
   color: Scalars['String']['output'];
 };
 
+export type StatusManagedColumn = {
+  __typename?: 'StatusManagedColumn';
+  created_at?: Maybe<Scalars['Date']['output']>;
+  created_by?: Maybe<Scalars['Int']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  revision?: Maybe<Scalars['Int']['output']>;
+  settings?: Maybe<StatusColumnSettings>;
+  settings_json?: Maybe<Scalars['JSON']['output']>;
+  state?: Maybe<ManagedColumnState>;
+  title?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+  updated_by?: Maybe<Scalars['Int']['output']>;
+};
+
 export type StatusValue = ColumnValue & {
   __typename?: 'StatusValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
@@ -2841,8 +3629,6 @@ export type StatusValue = ColumnValue & {
   index?: Maybe<Scalars['Int']['output']>;
   /** Whether the status is done */
   is_done?: Maybe<Scalars['Boolean']['output']>;
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The label of the status */
   label?: Maybe<Scalars['String']['output']>;
   /** The style of the status label */
@@ -2858,18 +3644,47 @@ export type StatusValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
+/** The discounts granted to the subscription */
+export type SubscriptionDiscount = {
+  __typename?: 'SubscriptionDiscount';
+  discount_model_type: SubscriptionDiscountModelType;
+  discount_type: SubscriptionDiscountType;
+  /** The value of the discount in percentage (e.g. the value 80 refers to 80%) */
+  value: Scalars['Int']['output'];
+};
+
+/** The information whether the discount is percentage or nominal */
+export enum SubscriptionDiscountModelType {
+  Nominal = 'nominal',
+  Percent = 'percent'
+}
+
+/** The information whether the discount has been granted one time or recurring */
+export enum SubscriptionDiscountType {
+  OneTime = 'one_time',
+  Recurring = 'recurring'
+}
+
+/** The billing period of the subscription. Possible values: monthly, yearly */
+export enum SubscriptionPeriodType {
+  Monthly = 'monthly',
+  Yearly = 'yearly'
+}
+
+/** The status of the subscription. Possible values: active, inactive. */
+export enum SubscriptionStatus {
+  Active = 'active',
+  Inactive = 'inactive'
+}
+
 export type SubtasksValue = ColumnValue & {
   __typename?: 'SubtasksValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** A string representing all the names of the subtasks, separated by commas */
   display_value: Scalars['String']['output'];
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The subitems */
   subitems: Array<Item>;
   /** The subitems IDs */
@@ -2895,14 +3710,10 @@ export type Tag = {
 
 export type TagsValue = ColumnValue & {
   __typename?: 'TagsValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Tag ID's */
   tag_ids: Array<Scalars['Int']['output']>;
   /** A list of tags */
@@ -2919,6 +3730,8 @@ export type Team = {
   __typename?: 'Team';
   /** The team's unique identifier. */
   id: Scalars['ID']['output'];
+  /** Whether the team is a guest team */
+  is_guest?: Maybe<Scalars['Boolean']['output']>;
   /** The team's name. */
   name: Scalars['String']['output'];
   /** The users who are the owners of the team. */
@@ -2950,14 +3763,10 @@ export type TeamUsersArgs = {
 
 export type TeamValue = ColumnValue & {
   __typename?: 'TeamValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** ID of the assigned team */
   team_id?: Maybe<Scalars['Int']['output']>;
   text?: Maybe<Scalars['String']['output']>;
@@ -2978,14 +3787,10 @@ export type Template = {
 
 export type TextValue = ColumnValue & {
   __typename?: 'TextValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The column's textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -3024,8 +3829,6 @@ export type TimeTrackingHistoryItem = {
 
 export type TimeTrackingValue = ColumnValue & {
   __typename?: 'TimeTrackingValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** Total duration of the time tracker */
@@ -3033,8 +3836,6 @@ export type TimeTrackingValue = ColumnValue & {
   history: Array<TimeTrackingHistoryItem>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Whether the time tracker is running */
   running?: Maybe<Scalars['Boolean']['output']>;
   /** The date when the time tracker was started */
@@ -3047,18 +3848,61 @@ export type TimeTrackingValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
+export type TimelineItem = {
+  __typename?: 'TimelineItem';
+  /** The board that the timeline item is on. */
+  board?: Maybe<Board>;
+  /** The content of the timeline item. */
+  content?: Maybe<Scalars['String']['output']>;
+  /** The creation date of the timeline item. */
+  created_at: Scalars['Date']['output'];
+  /** The external ID of the custom activity of the timeline item. */
+  custom_activity_id?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  /** The item that the timeline item is on. */
+  item?: Maybe<Item>;
+  /** The title of the timeline item. */
+  title?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  /** The user who created the timeline item. */
+  user?: Maybe<User>;
+};
+
+export type TimelineItemTimeRange = {
+  /** End time */
+  end_timestamp: Scalars['ISO8601DateTime']['input'];
+  /** Start time */
+  start_timestamp: Scalars['ISO8601DateTime']['input'];
+};
+
+export type TimelineItemsPage = {
+  __typename?: 'TimelineItemsPage';
+  /** Cursor for fetching the next page */
+  cursor?: Maybe<Scalars['String']['output']>;
+  /** The timeline items in the current page */
+  timeline_items: Array<TimelineItem>;
+};
+
+export type TimelineResponse = {
+  __typename?: 'TimelineResponse';
+  /** Paginated set of timeline items and a cursor to get the next page */
+  timeline_items_page: TimelineItemsPage;
+};
+
+
+export type TimelineResponseTimeline_Items_PageArgs = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type TimelineValue = ColumnValue & {
   __typename?: 'TimelineValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The start date of the timeline */
   from?: Maybe<Scalars['Date']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The range of dates representing the timeline (YYYY-MM-DD) */
   text?: Maybe<Scalars['String']['output']>;
   /** The end date of the timeline */
@@ -3075,14 +3919,10 @@ export type TimelineValue = ColumnValue & {
 
 export type UnsupportedValue = ColumnValue & {
   __typename?: 'UnsupportedValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** Text representation of the column value. Note: Not all columns support textual value */
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
@@ -3104,16 +3944,150 @@ export type Update = {
   creator?: Maybe<User>;
   /** The unique identifier of the update creator. */
   creator_id?: Maybe<Scalars['String']['output']>;
+  edited_at: Scalars['Date']['output'];
   /** The update's unique identifier. */
   id: Scalars['ID']['output'];
+  item?: Maybe<Item>;
   /** The update's item ID. */
   item_id?: Maybe<Scalars['String']['output']>;
+  likes: Array<Like>;
+  pinned_to_top: Array<UpdatePin>;
   /** The update's replies. */
-  replies?: Maybe<Array<Maybe<Reply>>>;
+  replies?: Maybe<Array<Reply>>;
   /** The update's text body. */
   text_body?: Maybe<Scalars['String']['output']>;
   /** The update's last edit date. */
   updated_at?: Maybe<Scalars['Date']['output']>;
+  viewers: Array<Watcher>;
+};
+
+
+/** An update. */
+export type UpdateViewersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateDropdownColumnSettingsInput = {
+  labels: Array<UpdateDropdownLabelInput>;
+};
+
+export type UpdateDropdownLabelInput = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  is_deactivated?: InputMaybe<Scalars['Boolean']['input']>;
+  label: Scalars['String']['input'];
+};
+
+/** Attributes of the email domain to be updated. */
+export type UpdateEmailDomainAttributesInput = {
+  /** The new email domain. */
+  new_domain: Scalars['String']['input'];
+  /** The user identifiers (max 200) */
+  user_ids: Array<Scalars['ID']['input']>;
+};
+
+/** Error that occurred while changing email domain. */
+export type UpdateEmailDomainError = {
+  __typename?: 'UpdateEmailDomainError';
+  /** The error code. */
+  code?: Maybe<UpdateEmailDomainErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes that can occur while changing email domain. */
+export enum UpdateEmailDomainErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UpdateEmailDomainError = 'UPDATE_EMAIL_DOMAIN_ERROR',
+  UserNotFound = 'USER_NOT_FOUND'
+}
+
+/** Result of updating the email domain for the specified users. */
+export type UpdateEmailDomainResult = {
+  __typename?: 'UpdateEmailDomainResult';
+  /** Errors that occurred during the update. */
+  errors?: Maybe<Array<UpdateEmailDomainError>>;
+  /** The users for which the email domain was updated. */
+  updated_users?: Maybe<Array<User>>;
+};
+
+/** The pin to top data of the update. */
+export type UpdatePin = {
+  __typename?: 'UpdatePin';
+  item_id: Scalars['ID']['output'];
+};
+
+export type UpdateStatusColumnSettingsInput = {
+  labels: Array<UpdateStatusLabelInput>;
+};
+
+export type UpdateStatusLabelInput = {
+  color: StatusColumnColors;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  index: Scalars['Int']['input'];
+  is_deactivated?: InputMaybe<Scalars['Boolean']['input']>;
+  is_done?: InputMaybe<Scalars['Boolean']['input']>;
+  label: Scalars['String']['input'];
+};
+
+/** Error that occurred while updating users attributes. */
+export type UpdateUserAttributesError = {
+  __typename?: 'UpdateUserAttributesError';
+  /** The error code. */
+  code?: Maybe<UpdateUserAttributesErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes that can occur while updating user attributes. */
+export enum UpdateUserAttributesErrorCode {
+  InvalidField = 'INVALID_FIELD'
+}
+
+/** The result of updating users attributes. */
+export type UpdateUserAttributesResult = {
+  __typename?: 'UpdateUserAttributesResult';
+  /** Errors that occurred during the update. */
+  errors?: Maybe<Array<UpdateUserAttributesError>>;
+  /** The users that were updated. */
+  updated_users?: Maybe<Array<User>>;
+};
+
+/** Error that occurred during updating users role. */
+export type UpdateUsersRoleError = {
+  __typename?: 'UpdateUsersRoleError';
+  /** The error code. */
+  code?: Maybe<UpdateUsersRoleErrorCode>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+  /** The id of the user that caused the error. */
+  user_id?: Maybe<Scalars['ID']['output']>;
+};
+
+/** Error codes for updating users roles. */
+export enum UpdateUsersRoleErrorCode {
+  CannotUpdateSelf = 'CANNOT_UPDATE_SELF',
+  ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
+  Failed = 'FAILED',
+  InvalidInput = 'INVALID_INPUT',
+  UserNotFound = 'USER_NOT_FOUND'
+}
+
+/** Result of updating users role. */
+export type UpdateUsersRoleResult = {
+  __typename?: 'UpdateUsersRoleResult';
+  /** Errors that occurred during updating users role. */
+  errors?: Maybe<Array<UpdateUsersRoleError>>;
+  /** The users that were updated. */
+  updated_users?: Maybe<Array<User>>;
 };
 
 /** Attributes of a workspace to update */
@@ -3131,6 +4105,8 @@ export type User = {
   __typename?: 'User';
   /** The user's account. */
   account: Account;
+  /** The products the user is assigned to. */
+  account_products?: Maybe<Array<AccountProduct>>;
   /** The user's birthday. */
   birthday?: Maybe<Scalars['Date']['output']>;
   /** The user's country code. */
@@ -3147,6 +4123,8 @@ export type User = {
   email: Scalars['String']['output'];
   /** Is the user enabled or not. */
   enabled: Scalars['Boolean']['output'];
+  /** The token of the user for email to board. */
+  encrypt_api_token?: Maybe<Scalars['String']['output']>;
   /** The user's unique identifier. */
   id: Scalars['ID']['output'];
   /** Is the user an account admin. */
@@ -3203,6 +4181,28 @@ export type UserTeamsArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+/** The attributes to update for a user. */
+export type UserAttributesInput = {
+  /** The birthday of the user. */
+  birthday?: InputMaybe<Scalars['String']['input']>;
+  /** The department of the user. */
+  department?: InputMaybe<Scalars['String']['input']>;
+  /** The email of the user. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** The join date of the user. */
+  join_date?: InputMaybe<Scalars['String']['input']>;
+  /** The location of the user. */
+  location?: InputMaybe<Scalars['String']['input']>;
+  /** The mobile phone of the user. */
+  mobile_phone?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the user. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** The phone of the user. */
+  phone?: InputMaybe<Scalars['String']['input']>;
+  /** The title of the user. */
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** The possibilities for a user kind. */
 export enum UserKind {
   /** All users in account. */
@@ -3214,6 +4214,20 @@ export enum UserKind {
   /** All non pending members. */
   NonPending = 'non_pending'
 }
+
+/** The role of the user. */
+export enum UserRole {
+  Admin = 'ADMIN',
+  Guest = 'GUEST',
+  Member = 'MEMBER',
+  PortalUser = 'PORTAL_USER',
+  ViewOnly = 'VIEW_ONLY'
+}
+
+export type UserUpdateInput = {
+  user_attribute_updates: UserAttributesInput;
+  user_id: Scalars['ID']['input'];
+};
 
 /** An object containing the API version details */
 export type Version = {
@@ -3248,14 +4262,10 @@ export enum VersionKind {
 
 export type VoteValue = ColumnValue & {
   __typename?: 'VoteValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** The column's type. */
   type: ColumnType;
@@ -3269,6 +4279,14 @@ export type VoteValue = ColumnValue & {
   voter_ids: Array<Scalars['ID']['output']>;
   /** A list of users who voted */
   voters: Array<User>;
+};
+
+/** The viewer of the update. */
+export type Watcher = {
+  __typename?: 'Watcher';
+  medium: Scalars['String']['output'];
+  user?: Maybe<User>;
+  user_id: Scalars['ID']['output'];
 };
 
 /** Monday webhooks */
@@ -3332,16 +4350,12 @@ export enum WebhookEventType {
 
 export type WeekValue = ColumnValue & {
   __typename?: 'WeekValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The end date of the week */
   end_date?: Maybe<Scalars['Date']['output']>;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   /** The start date of the week */
   start_date?: Maybe<Scalars['Date']['output']>;
   /** The range of dates representing the week (YYYY-MM-DD) */
@@ -3455,14 +4469,10 @@ export enum WorkspacesOrderBy {
 
 export type WorldClockValue = ColumnValue & {
   __typename?: 'WorldClockValue';
-  /** The board's unique identifier. */
-  board_id: Scalars['ID']['output'];
   /** The column that this value belongs to. */
   column: Column;
   /** The column's unique identifier. */
   id: Scalars['ID']['output'];
-  /** The item's unique identifier. */
-  item_id: Scalars['ID']['output'];
   text?: Maybe<Scalars['String']['output']>;
   /** Timezone */
   timezone?: Maybe<Scalars['String']['output']>;
@@ -3776,3 +4786,33 @@ export type GetTypeDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTypeDetailsQuery = { __typename?: 'Query', __type?: { __typename?: '__Type', name?: string | null, description?: string | null, kind: __TypeKind, fields?: Array<{ __typename?: '__Field', name: string, description?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } | null }, args: Array<{ __typename?: '__InputValue', name: string, description?: string | null, defaultValue?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } }> }> | null, inputFields?: Array<{ __typename?: '__InputValue', name: string, description?: string | null, defaultValue?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } | null } }> | null, interfaces?: Array<{ __typename?: '__Type', name?: string | null }> | null, enumValues?: Array<{ __typename?: '__EnumValue', name: string, description?: string | null }> | null, possibleTypes?: Array<{ __typename?: '__Type', name?: string | null }> | null } | null };
+
+export type CreateCustomActivityMutationVariables = Exact<{
+  color: CustomActivityColor;
+  icon_id: CustomActivityIcon;
+  name: Scalars['String']['input'];
+}>;
+
+
+export type CreateCustomActivityMutation = { __typename?: 'Mutation', create_custom_activity?: { __typename?: 'CustomActivity', color?: CustomActivityColor | null, icon_id?: CustomActivityIcon | null, name?: string | null } | null };
+
+export type CreateTimelineItemMutationVariables = Exact<{
+  item_id: Scalars['ID']['input'];
+  custom_activity_id: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+  summary?: InputMaybe<Scalars['String']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  timestamp: Scalars['ISO8601DateTime']['input'];
+  time_range?: InputMaybe<TimelineItemTimeRange>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateTimelineItemMutation = { __typename?: 'Mutation', create_timeline_item?: { __typename?: 'TimelineItem', id?: string | null, title?: string | null, content?: string | null, created_at: any, custom_activity_id?: string | null, type?: string | null } | null };
+
+export type FetchCustomActivityQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchCustomActivityQuery = { __typename?: 'Query', custom_activity?: Array<{ __typename?: 'CustomActivity', color?: CustomActivityColor | null, icon_id?: CustomActivityIcon | null, id?: string | null, name?: string | null, type?: string | null }> | null };

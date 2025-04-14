@@ -12,6 +12,9 @@ import { DeleteColumnTool } from './delete-column-tool';
 import { AllMondayApiTool } from './all-monday-api-tool';
 import { GetGraphQLSchemaTool } from './get-graphql-schema-tool';
 import { GetTypeDetailsTool } from './get-type-details-tool';
+import { CreateCustomActivityTool } from './create-custom-activity-tool';
+import { CreateTimelineItemTool } from './create-timeline-item-tool';
+import { FetchCustomActivityTool } from './fetch-custom-activity-tool';
 
 export const allTools = [
   DeleteItemTool,
@@ -28,6 +31,9 @@ export const allTools = [
   AllMondayApiTool,
   GetGraphQLSchemaTool,
   GetTypeDetailsTool,
+  CreateCustomActivityTool,
+  CreateTimelineItemTool,
+  FetchCustomActivityTool,
 ];
 
 export * from './delete-item-tool';
@@ -44,3 +50,6 @@ export * from './delete-column-tool';
 export * from './all-monday-api-tool';
 export * from './get-graphql-schema-tool';
 export * from './get-type-details-tool';
+export * from './create-custom-activity-tool';
+export * from './create-timeline-item-tool';
+export * from './fetch-custom-activity-tool';
