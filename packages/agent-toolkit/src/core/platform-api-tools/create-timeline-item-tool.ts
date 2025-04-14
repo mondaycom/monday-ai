@@ -40,13 +40,12 @@ export class CreateTimelineItemTool extends BaseMondayApiTool<typeof createTimel
       custom_activity_id: input.custom_activity_id,
       title: input.title,
       timestamp: input.timestamp,
+      summary: input.summary,
+      content: input.content,
+      location: input.location,
+      phone: input.phone,
+      url: input.url,
     };
-
-    if (input.summary) variables.summary = input.summary;
-    if (input.content) variables.content = input.content;
-    if (input.location) variables.location = input.location;
-    if (input.phone) variables.phone = input.phone;
-    if (input.url) variables.url = input.url;
 
     if (input.start_timestamp && input.end_timestamp) {
       variables.time_range = {
