@@ -30,13 +30,9 @@ export class MondayAgentToolkit extends McpServer {
       version: '1.0.0',
     });
 
-    // Initialize the Monday API client
     this.mondayApiClient = this.createApiClient(config);
-
-    // Store token for CLI tools
     this.mondayApiToken = config.mondayApiToken;
 
-    // Register the tools
     this.registerTools(config);
   }
 
@@ -62,10 +58,8 @@ export class MondayAgentToolkit extends McpServer {
    */
   private registerTools(config: MondayAgentToolkitConfig): void {
     try {
-      // Initialize both API and CLI tools
       const toolInstances = this.initializeTools(config);
 
-      // Register each tool with MCP
       toolInstances.forEach((tool) => this.registerTool(tool));
     } catch (error) {
       console.error('Failed to register tools:', error instanceof Error ? error.message : String(error));

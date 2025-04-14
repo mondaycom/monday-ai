@@ -23,17 +23,13 @@ export class MondayAgentToolkit {
   tools: Tool<any, any>[];
 
   constructor(config: MondayAgentToolkitConfig) {
-    // Initialize the Monday API client
     this.mondayApi = new ApiClient({
       token: config.mondayApiToken,
       apiVersion: config.mondayApiVersion,
       requestConfig: config.mondayApiRequestConfig,
     });
-
-    // Store token for CLI tools
     this.mondayApiToken = config.mondayApiToken;
 
-    // Initialize tools
     this.tools = this.initializeTools(config);
   }
 
@@ -43,7 +39,6 @@ export class MondayAgentToolkit {
   private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
     const tools: Tool<any, any>[] = [];
 
-    // Initialize API tools
     const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApi, config.toolsConfiguration);
     for (const ToolClass of filteredApiTools) {
       try {
