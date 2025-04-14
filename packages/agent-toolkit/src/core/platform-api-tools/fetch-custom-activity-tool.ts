@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { ToolOutputType } from '../tool';
 import { ToolInputType } from '../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
@@ -13,7 +12,7 @@ export class FetchCustomActivityTool extends BaseMondayApiTool<typeof fetchCusto
   type = ToolType.QUERY;
 
   getDescription(): string {
-    return 'Get custom activities from the monday.com Emails & Activities app';
+    return 'Get custom activities from the E&A app';
   }
 
   getInputSchema(): typeof fetchCustomActivityToolSchema {

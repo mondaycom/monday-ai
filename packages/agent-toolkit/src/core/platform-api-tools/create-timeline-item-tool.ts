@@ -22,13 +22,12 @@ export const createTimelineItemToolSchema = {
   url: z.string().optional().describe('The URL to add to the new timeline item'),
 };
 
-// Create the tool class
 export class CreateTimelineItemTool extends BaseMondayApiTool<typeof createTimelineItemToolSchema> {
   name = 'create_timeline_item';
   type = ToolType.MUTATION;
 
   getDescription(): string {
-    return 'Create a new timeline item in a monday.com board';
+    return 'Create a new timeline item in the E&A app';
   }
 
   getInputSchema(): typeof createTimelineItemToolSchema {

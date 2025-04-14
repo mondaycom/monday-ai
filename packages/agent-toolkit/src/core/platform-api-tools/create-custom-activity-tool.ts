@@ -4,7 +4,6 @@ import {
   CreateCustomActivityMutationVariables,
   CustomActivityColor,
   CustomActivityIcon,
-  MutationCreate_Custom_ActivityArgs,
 } from '../../monday-graphql/generated/graphql';
 import { ToolOutputType } from '../tool';
 import { ToolInputType } from '../tool';
@@ -23,7 +22,7 @@ export class CreateCustomActivityTool extends BaseMondayApiTool<typeof createCus
   type = ToolType.MUTATION;
 
   getDescription(): string {
-    return 'Create a new custom activity in monday.com';
+    return 'Create a new custom activity in the E&A app';
   }
 
   getInputSchema(): typeof createCustomActivityToolSchema {
