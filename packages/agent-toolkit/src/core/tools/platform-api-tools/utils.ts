@@ -1,18 +1,18 @@
 import { ApiClient } from '@mondaydotcomorg/api';
-import { ToolType } from './tool';
-import { BaseMondayApiTool } from './platform-api-tools/base-monday-api-tool';
+import { ToolType } from '../../tool';
+import { BaseMondayApiTool } from './base-monday-api-tool';
 
-export type ToolsConfiguration = {
+export type ApiToolsConfiguration = {
   include?: string[];
   exclude?: string[];
   readOnlyMode?: boolean;
   enableDynamicApiTools?: boolean;
 };
 
-export function filterTools<T extends new (api: ApiClient) => BaseMondayApiTool<any>>(
+export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTool<any>>(
   tools: T[],
   apiClient: ApiClient,
-  config?: ToolsConfiguration,
+  config?: ApiToolsConfiguration,
 ): T[] {
   if (!config) {
     return tools;

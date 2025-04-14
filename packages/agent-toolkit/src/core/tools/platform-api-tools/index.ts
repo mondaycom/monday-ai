@@ -12,8 +12,9 @@ import { DeleteColumnTool } from './delete-column-tool';
 import { AllMondayApiTool } from './all-monday-api-tool';
 import { GetGraphQLSchemaTool } from './get-graphql-schema-tool';
 import { GetTypeDetailsTool } from './get-type-details-tool';
+import { filterApiTools } from './utils';
 
-export const allTools = [
+export const allGraphqlApiTools = [
   DeleteItemTool,
   GetBoardItemsTool,
   CreateItemTool,
@@ -30,17 +31,4 @@ export const allTools = [
   GetTypeDetailsTool,
 ];
 
-export * from './delete-item-tool';
-export * from './get-board-items-tool';
-export * from './create-item-tool';
-export * from './create-update-tool';
-export * from './get-board-schema-tool';
-export * from './get-users-tool';
-export * from './change-item-column-values-tool';
-export * from './move-item-to-group-tool';
-export * from './create-board-tool';
-export * from './create-column-tool';
-export * from './delete-column-tool';
-export * from './all-monday-api-tool';
-export * from './get-graphql-schema-tool';
-export * from './get-type-details-tool';
+export { filterApiTools };

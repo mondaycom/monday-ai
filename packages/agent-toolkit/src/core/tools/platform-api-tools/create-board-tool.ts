@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { createBoard } from '../../monday-graphql/queries.graphql';
-import { BoardKind, CreateBoardMutation, CreateBoardMutationVariables } from '../../monday-graphql/generated/graphql';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
+import { createBoard } from '../../../monday-graphql/queries.graphql';
+import { BoardKind, CreateBoardMutation, CreateBoardMutationVariables } from '../../../monday-graphql/generated/graphql';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 
 export const createBoardToolSchema = {
   boardName: z.string().describe('The name of the board to create'),

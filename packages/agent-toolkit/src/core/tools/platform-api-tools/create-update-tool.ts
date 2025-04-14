@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
-import { createUpdate } from '../../monday-graphql/queries.graphql';
-import { CreateUpdateMutation, CreateUpdateMutationVariables } from '../../monday-graphql/generated/graphql';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { createUpdate } from '../../../monday-graphql/queries.graphql';
+import { CreateUpdateMutation, CreateUpdateMutationVariables } from '../../../monday-graphql/generated/graphql';
 
 export const createUpdateToolSchema = {
   itemId: z.number().describe('The id of the item to which the update will be added'),

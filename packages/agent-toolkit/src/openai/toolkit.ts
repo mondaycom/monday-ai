@@ -1,34 +1,76 @@
 import { ApiClient, ApiClientConfig } from '@mondaydotcomorg/api';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import type {
-  ChatCompletionTool,
   ChatCompletionMessageToolCall,
+  ChatCompletionTool,
   ChatCompletionToolMessageParam,
 } from 'openai/resources';
 import { z } from 'zod';
-import { Tool, allTools } from '../core';
-import { filterTools, ToolsConfiguration } from '../core/utils';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { Tool } from '../core/tool';
+import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
+import { ApiToolsConfiguration, filterApiTools } from '../core/tools/platform-api-tools/utils';
 
 export type MondayAgentToolkitConfig = {
   mondayApiToken: ApiClientConfig['token'];
   mondayApiVersion?: ApiClientConfig['apiVersion'];
   mondayApiRequestConfig?: ApiClientConfig['requestConfig'];
-  toolsConfiguration?: ToolsConfiguration;
+  toolsConfiguration?: ApiToolsConfiguration;
 };
 
 export class MondayAgentToolkit {
   private readonly mondayApi: ApiClient;
+  private readonly mondayApiToken?: string;
   tools: Tool<any, any>[];
 
   constructor(config: MondayAgentToolkitConfig) {
+    // Initialize the Monday API client
     this.mondayApi = new ApiClient({
       token: config.mondayApiToken,
       apiVersion: config.mondayApiVersion,
       requestConfig: config.mondayApiRequestConfig,
     });
 
-    const toolsToRegister = filterTools(allTools, this.mondayApi, config.toolsConfiguration);
-    this.tools = toolsToRegister.map((tool) => new tool(this.mondayApi)) as Tool<any, any>[];
+    // Store token for CLI tools
+    this.mondayApiToken = config.mondayApiToken;
+
+    // Initialize tools
+    this.tools = this.initializeTools(config);
+  }
+
+  /**
+   * Initialize both API and CLI tools
+   */
+  private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
+    const tools: Tool<any, any>[] = [];
+
+    // Initialize API tools
+    const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApi, config.toolsConfiguration);
+    for (const ToolClass of filteredApiTools) {
+      try {
+        // Using any to bypass type checking during instantiation
+        const tool = new (ToolClass as any)(this.mondayApi);
+        tools.push(tool);
+      } catch (error) {
+        console.warn(
+          `Failed to initialize API tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+
+    // Initialize Monday Apps tools
+    for (const ToolClass of allMondayAppsTools) {
+      try {
+        // Using any to bypass type checking during instantiation
+        const tool = new ToolClass(this.mondayApiToken);
+        tools.push(tool);
+      } catch (error) {
+        console.warn(
+          `Failed to initialize Monday Apps tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+
+    return tools;
   }
 
   /**
@@ -67,18 +109,27 @@ export class MondayAgentToolkit {
       throw new Error(`Unknown tool: ${name}`);
     }
 
-    const parsedResult = z.object(tool.getInputSchema()).safeParse(args);
-    if (!parsedResult.success) {
-      // TODO: log error?
-      throw new Error(`Invalid arguments: ${parsedResult.error.message}`);
+    const inputSchema = tool.getInputSchema();
+    if (inputSchema) {
+      const parsedResult = z.object(inputSchema).safeParse(args);
+      if (!parsedResult.success) {
+        throw new Error(`Invalid arguments: ${parsedResult.error.message}`);
+      }
+
+      const result = await tool.execute(parsedResult.data);
+      return {
+        role: 'tool',
+        tool_call_id: toolCall.id,
+        content: result.content,
+      } as ChatCompletionToolMessageParam;
+    } else {
+      // Handle tools without input schema
+      const result = await tool.execute();
+      return {
+        role: 'tool',
+        tool_call_id: toolCall.id,
+        content: result.content,
+      } as ChatCompletionToolMessageParam;
     }
-
-    const result = await tool.execute(parsedResult.data);
-
-    return {
-      role: 'tool',
-      tool_call_id: toolCall.id,
-      content: result.content,
-    } as ChatCompletionToolMessageParam;
   }
 }
