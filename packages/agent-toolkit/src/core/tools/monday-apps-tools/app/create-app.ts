@@ -26,7 +26,7 @@ export class CreateAppTool extends BaseMondayAppsTool<typeof createPlainAppSchem
       });
 
       return {
-        content: `Successfully created app "${input.name}": ${JSON.stringify(response)}.`,
+        content: `Created app "${input.name}" (ID: ${response.app.id}, Version: ${response.app_version.id})`,
         metadata: response,
       };
     } catch (error) {
