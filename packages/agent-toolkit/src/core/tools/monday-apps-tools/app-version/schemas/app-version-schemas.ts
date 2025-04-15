@@ -14,14 +14,16 @@ export interface AppVersionsApiDataResponse extends MondayApiResponse {
   }>;
 }
 
-export interface AppVersionApiData extends MondayApiResponse {
-  id: number;
-  name: string;
-  appId: number;
-  versionNumber: string;
-  status: string;
-  mondayCodeConfig?: {
-    isMultiRegion: boolean;
+export interface AppVersionApiDataResponse extends MondayApiResponse {
+  appVersion: {
+    id: number;
+    name: string;
+    appId: number;
+    versionNumber: string;
+    status: string;
+    mondayCodeConfig?: {
+      isMultiRegion: boolean;
+    };
   };
 }
 

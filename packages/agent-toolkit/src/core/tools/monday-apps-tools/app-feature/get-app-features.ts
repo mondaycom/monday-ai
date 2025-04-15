@@ -31,14 +31,19 @@ export class GetAppFeaturesTool extends BaseMondayAppsTool<typeof getAppFeatures
         { query },
       );
 
-      // The response is an array, so we need to check if it has a length property
-      const featuresCount = Array.isArray(response) ? response.length : 0;
+      const features = response.appFeatures || [];
+      const featuresCount = features.length;
+
+      const featuresSummary = features
+        .map((feature) => `${feature.name} (ID: ${feature.id}, Type: ${feature.type}, State: ${feature.state})`)
+        .join(', ');
 
       return {
-        content: `Successfully retrieved ${featuresCount} app features for app version ID ${appVersionId}${type ? ` of type ${type}` : ''}.`,
+        content:
+          `Successfully retrieved ${featuresCount} app features for app version ID ${appVersionId}${type ? ` of type ${type}` : ''}.\n` +
+          `Features: ${featuresSummary || 'No features found'}`,
         metadata: {
           ...response,
-          length: featuresCount,
           statusCode: response.statusCode,
           headers: response.headers,
         },
@@ -50,7 +55,7 @@ export class GetAppFeaturesTool extends BaseMondayAppsTool<typeof getAppFeatures
         metadata: {
           statusCode: 500,
           error: errorMessage,
-          length: 0,
+          appFeatures: [],
         } as AppFeaturesResponse,
       };
     }

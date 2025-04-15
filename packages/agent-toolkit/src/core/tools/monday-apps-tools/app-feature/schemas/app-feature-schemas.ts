@@ -2,9 +2,24 @@ import { z } from 'zod';
 import { MondayApiResponse } from '../../base-tool/monday-apps-tool';
 import { AppFeatureType } from '../../consts/apps.consts';
 
-export interface AppFeaturesResponse extends MondayApiResponse {
+export interface AppFeature {
+  id: number;
+  app_id: number;
+  app_version_id: number;
+  app_feature_reference_id: number;
+  source_app_feature_id: number | null;
+  name: string;
+  type: AppFeatureType;
+  state: string;
+  user_id: number;
+  data: Record<string, any>;
+  schema: boolean | null;
+  status: string | null;
   [key: string]: any;
-  length?: number;
+}
+
+export interface AppFeaturesResponse extends MondayApiResponse {
+  appFeatures: AppFeature[];
 }
 
 export const getAppFeaturesSchema = z.object({
@@ -12,12 +27,25 @@ export const getAppFeaturesSchema = z.object({
   type: z.nativeEnum(AppFeatureType).optional().describe('Filter by app feature type'),
 });
 
-export interface CreateAppFeatureResponse extends MondayApiResponse {
+export interface AppFeatureReference {
   id: number;
-  app_id: number;
-  app_version_id: number;
-  name: string;
-  type: AppFeatureType;
+  created_at: string;
+  updated_at: string;
+  live_app_feature_id: number;
+  app_feature_reference_id: number;
+}
+
+export interface DetailedAppFeature extends AppFeature {
+  client_instance_token: string;
+  created_at: string;
+  updated_at: string;
+  current_release: string | null;
+  configured_secret_names: string[];
+}
+
+export interface CreateAppFeatureResponse extends MondayApiResponse {
+  app_feature: DetailedAppFeature;
+  app_feature_reference: AppFeatureReference;
 }
 
 export const createAppFeatureSchema = z.object({

@@ -30,8 +30,19 @@ export class GetAppVersionsTool extends BaseMondayAppsTool<
         API_ENDPOINTS.APP_VERSIONS.GET_ALL(appId),
       );
 
+      // Create a detailed summary of versions
+      const versionsSummary = response.appVersions
+        .map((version) =>
+          [
+            `- Version ${version.versionNumber} (ID: ${version.id})`,
+            `  Name: ${version.name}`,
+            `  Status: ${version.status}`,
+          ].join('\n'),
+        )
+        .join('\n');
+
       return {
-        content: `Successfully retrieved ${response.appVersions.length} versions for app ID ${appId}.`,
+        content: `Successfully retrieved ${response.appVersions.length} versions for app ID ${appId}:\n\n${versionsSummary}`,
         metadata: response,
       };
     } catch (error) {

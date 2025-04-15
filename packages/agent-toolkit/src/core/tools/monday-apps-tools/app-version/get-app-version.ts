@@ -2,9 +2,9 @@ import { ToolInputType, ToolOutputType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
-import { AppVersionApiData, getAppVersionSchema } from './schemas/app-version-schemas';
+import { AppVersionApiDataResponse, getAppVersionSchema } from './schemas/app-version-schemas';
 
-export class GetAppVersionTool extends BaseMondayAppsTool<typeof getAppVersionSchema.shape, AppVersionApiData> {
+export class GetAppVersionTool extends BaseMondayAppsTool<typeof getAppVersionSchema.shape, AppVersionApiDataResponse> {
   name = 'monday_apps_get_app_version';
   category = MondayAppsToolCategory.APP_VERSION;
 
@@ -16,17 +16,24 @@ export class GetAppVersionTool extends BaseMondayAppsTool<typeof getAppVersionSc
     return getAppVersionSchema.shape;
   }
 
-  async execute(input: ToolInputType<typeof getAppVersionSchema.shape>): Promise<ToolOutputType<AppVersionApiData>> {
+  async execute(
+    input: ToolInputType<typeof getAppVersionSchema.shape>,
+  ): Promise<ToolOutputType<AppVersionApiDataResponse>> {
     try {
       const { versionId } = input;
 
-      const response = await this.executeApiRequest<AppVersionApiData>(
+      const response = await this.executeApiRequest<AppVersionApiDataResponse>(
         HttpMethod.GET,
         API_ENDPOINTS.APP_VERSIONS.GET_BY_ID(versionId),
       );
 
       return {
-        content: `Successfully retrieved details for app version ID ${versionId}.`,
+        content:
+          `Successfully retrieved details for app version ID ${versionId}:\n` +
+          `Name: ${response.appVersion.name}\n` +
+          `App ID: ${response.appVersion.appId}\n` +
+          `Version Number: ${response.appVersion.versionNumber}\n` +
+          `Status: ${response.appVersion.status}`,
         metadata: response,
       };
     } catch (error) {
@@ -34,14 +41,17 @@ export class GetAppVersionTool extends BaseMondayAppsTool<typeof getAppVersionSc
       return {
         content: `Failed to retrieve app version: ${errorMessage}`,
         metadata: {
-          statusCode: 500,
-          error: errorMessage,
-          id: input.versionId, // Fix the reference to versionId
-          name: '',
-          appId: 0,
-          versionNumber: '',
-          status: '',
-        } as AppVersionApiData,
+          appVersion: {
+            id: input.versionId,
+            name: '',
+            appId: 0,
+            versionNumber: '',
+            status: '',
+            mondayCodeConfig: {
+              isMultiRegion: false,
+            },
+          },
+        } as AppVersionApiDataResponse,
       };
     }
   }

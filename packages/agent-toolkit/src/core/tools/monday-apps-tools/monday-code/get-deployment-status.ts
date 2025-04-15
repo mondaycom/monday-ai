@@ -30,8 +30,19 @@ export class GetDeploymentStatusTool extends BaseMondayAppsTool<
         API_ENDPOINTS.CODE.GET_DEPLOYMENT_STATUS(appVersionId),
       );
 
+      // Create a more detailed status message
+      const statusDetails = [
+        `Status: ${response.status || 'Unknown'}`,
+        response.startTime ? `Started: ${new Date(response.startTime).toLocaleString()}` : null,
+        response.endTime ? `Completed: ${new Date(response.endTime).toLocaleString()}` : null,
+        response.error ? `Error: ${response.error}` : null,
+        response.logs ? `Logs: ${response.logs}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n');
+
       return {
-        content: `Deployment status for app version ID ${appVersionId}: ${response.status || 'Unknown'}`,
+        content: `Deployment status for app version ID ${appVersionId}:\n${statusDetails}`,
         metadata: response,
       };
     } catch (error) {

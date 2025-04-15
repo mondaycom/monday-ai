@@ -38,8 +38,9 @@ export class CreateAppFeatureTool extends BaseMondayAppsTool<
         { data: requestBody },
       );
 
+      const { app_feature } = response;
       return {
-        content: `Successfully created app feature '${name}' of type ${type} for app ID ${appId}, version ID ${appVersionId}.`,
+        content: `Successfully created app feature '${app_feature.name}' (ID: ${app_feature.id}) of type ${app_feature.type} for app ID ${app_feature.app_id}, version ID ${app_feature.app_version_id}. Feature state: ${app_feature.state}`,
         metadata: response,
       };
     } catch (error) {
@@ -49,11 +50,32 @@ export class CreateAppFeatureTool extends BaseMondayAppsTool<
         metadata: {
           statusCode: 500,
           error: errorMessage,
-          id: 0,
-          app_id: input.appId,
-          app_version_id: input.appVersionId,
-          name: input.name,
-          type: input.type,
+          app_feature: {
+            id: 0,
+            app_id: input.appId,
+            app_version_id: input.appVersionId,
+            app_feature_reference_id: 0,
+            source_app_feature_id: null,
+            name: input.name,
+            type: input.type,
+            state: 'error',
+            user_id: 0,
+            data: input.data || {},
+            schema: null,
+            status: null,
+            client_instance_token: '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            current_release: null,
+            configured_secret_names: [],
+          },
+          app_feature_reference: {
+            id: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            live_app_feature_id: 0,
+            app_feature_reference_id: 0,
+          },
         } as CreateAppFeatureResponse,
       };
     }
