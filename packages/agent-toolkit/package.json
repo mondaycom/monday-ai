@@ -1,6 +1,6 @@
 {
   "name": "@mondaydotcomorg/agent-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "monday.com agent toolkit",
   "type": "module",
   "exports": {

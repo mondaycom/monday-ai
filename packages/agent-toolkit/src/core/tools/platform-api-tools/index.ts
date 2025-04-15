@@ -13,6 +13,9 @@ import { GetGraphQLSchemaTool } from './get-graphql-schema-tool';
 import { GetTypeDetailsTool } from './get-type-details-tool';
 import { GetUsersTool } from './get-users-tool';
 import { MoveItemToGroupTool } from './move-item-to-group-tool';
+import { CreateCustomActivityTool } from './create-custom-activity-tool';
+import { CreateTimelineItemTool } from './create-timeline-item-tool';
+import { FetchCustomActivityTool } from './fetch-custom-activity-tool';
 import { filterApiTools } from './utils';
 
 export const allGraphqlApiTools: MondayApiToolType[] = [
@@ -30,6 +33,9 @@ export const allGraphqlApiTools: MondayApiToolType[] = [
   AllMondayApiTool,
   GetGraphQLSchemaTool,
   GetTypeDetailsTool,
+  CreateCustomActivityTool,
+  CreateTimelineItemTool,
+  FetchCustomActivityTool,
 ];
 
 export { filterApiTools };

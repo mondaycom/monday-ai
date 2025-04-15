@@ -1,4 +1,19 @@
 """
+Exposes a URL that specifies the behavior of this scalar.
+"""
+directive @specifiedBy(
+  """
+  The URL that specifies the behavior of this scalar.
+  """
+  url: String!
+) on SCALAR
+
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
 Your monday.com account
 """
 type Account {
@@ -85,37 +100,112 @@ type AccountProduct {
 }
 
 """
+A role in the account
+"""
+type AccountRole {
+  """
+  The ID of the role
+  """
+  id: ID
+
+  """
+  The name of the role
+  """
+  name: String
+
+  """
+  The type of the role
+  """
+  roleType: String
+}
+
+"""
+Error that occurred during activation.
+"""
+type ActivateUsersError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: ActivateUsersErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes for activating users.
+"""
+enum ActivateUsersErrorCode {
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of activating users.
+"""
+type ActivateUsersResult {
+  """
+  The users that were activated.
+  """
+  activated_users: [User!]
+
+  """
+  Errors that occurred during activation.
+  """
+  errors: [ActivateUsersError!]
+}
+
+"""
 An activity log event
 """
 type ActivityLogType {
-  """
-  """
   account_id: String!
-
-  """
-  """
   created_at: String!
 
   """
   The item's column values in string form.
   """
   data: String!
-
-  """
-  """
   entity: String!
-
-  """
-  """
   event: String!
-
-  """
-  """
   id: String!
+  user_id: String!
+}
+
+type AppFeatureType {
+  id: ID!
+  created_at: Date
+  updated_at: Date
 
   """
+  The name of the app feature
   """
-  user_id: String!
+  name: String
+
+  """
+  The app feature app id
+  """
+  app_id: ID
+
+  """
+  The type of the app feature
+  """
+  type: String
+
+  """
+  The data of the app feature
+  """
+  data: JSON
 }
 
 """
@@ -199,6 +289,17 @@ type AppMonetizationStatus {
 }
 
 """
+The app monetization information for the current account
+"""
+type AppsMonetizationInfo {
+  """
+  The number of seats in the account, across all products, used to match the
+  app’s subscription among apps that utilize the seats-based monetization method
+  """
+  seats_count: Int
+}
+
+"""
 The account subscription details for the app.
 """
 type AppSubscription {
@@ -239,6 +340,54 @@ type AppSubscription {
 }
 
 """
+Subscription object
+"""
+type AppSubscriptionDetails {
+  """
+  The ID of an account
+  """
+  account_id: Int!
+
+  """
+  The ID of a pricing plan
+  """
+  plan_id: String!
+
+  """
+  The ID of a pricing version
+  """
+  pricing_version_id: Int!
+
+  """
+  The monthly price of the product purchased in the given currency, after applying discounts
+  """
+  monthly_price: Float!
+
+  """
+  The currency, in which the product was purchased
+  """
+  currency: String!
+  period_type: SubscriptionPeriodType!
+
+  """
+  The date the active subscription is set to renew. Equals to null for inactive subscriptions
+  """
+  renewal_date: String
+
+  """
+  The date the the inactive subscription ended. Equals to null for active subscriptions
+  """
+  end_date: String
+  status: SubscriptionStatus!
+  discounts: [SubscriptionDiscount!]!
+
+  """
+  The number of days left until the subscription ends
+  """
+  days_left: Int!
+}
+
+"""
 The Operations counter response for the app action.
 """
 type AppSubscriptionOperationsCounter {
@@ -261,6 +410,71 @@ type AppSubscriptionOperationsCounter {
   Window key.
   """
   period_key: String
+}
+
+type AppSubscriptions {
+  subscriptions: [AppSubscriptionDetails!]!
+
+  """
+  Total number of subscriptions matching the given parameters
+  """
+  total_count: Int!
+
+  """
+  The value, which identifies the exact point to continue fetching the subscriptions from
+  """
+  cursor: String
+}
+
+type AppType {
+  id: ID!
+  created_at: Date
+  updated_at: Date
+
+  """
+  the app name
+  """
+  name: String
+
+  """
+  the api app id
+  """
+  api_app_id: ID
+
+  """
+  the api app id
+  """
+  client_id: String
+
+  """
+  the app kid
+  """
+  kind: String
+
+  """
+  the app state
+  """
+  state: String
+
+  """
+  the app user id
+  """
+  user_id: ID
+
+  """
+  The apps' features
+  """
+  features(
+    """
+    Number of items to get, the default is 25.
+    """
+    limit: Int = 25
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+  ): [AppFeatureType!]
 }
 
 """
@@ -291,17 +505,6 @@ type AppVersion {
   The app's version type.
   """
   type: String
-}
-
-"""
-The app monetization information for the current account
-"""
-type AppsMonetizationInfo {
-  """
-  The number of seats in the account, across all products, used to match the
-  app’s subscription among apps that utilize the seats-based monetization method
-  """
-  seats_count: Int
 }
 
 """
@@ -380,6 +583,65 @@ enum AssetsSource {
 }
 
 """
+Error that occurred while changing team owners.
+"""
+type AssignTeamOwnersError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: AssignTeamOwnersErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes that can occur while changing team owners.
+"""
+enum AssignTeamOwnersErrorCode {
+  VIEWERS_OR_GUESTS
+  USER_NOT_MEMBER_OF_TEAM
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of changing the team's ownership.
+"""
+type AssignTeamOwnersResult {
+  """
+  The team for which the owners were changed.
+  """
+  team: Team
+
+  """
+  Errors that occurred while changing team owners.
+  """
+  errors: [AssignTeamOwnersError!]
+}
+
+"""
+The role of the user.
+"""
+enum BaseRoleName {
+  PORTAL_USER
+  GUEST
+  VIEW_ONLY
+  MEMBER
+  ADMIN
+}
+
+"""
 Result of an batch operation
 """
 type BatchExtendTrialPeriod {
@@ -403,6 +665,31 @@ type BatchExtendTrialPeriod {
 A monday.com board.
 """
 type Board {
+  """
+  The unique identifier of the board.
+  """
+  id: ID!
+
+  """
+  The board's updates.
+  """
+  updates(
+    """
+    Number of items to get, the default is 25.
+    """
+    limit: Int = 25
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+
+    """
+    A list of items unique identifiers.
+    """
+    ids: [ID!]
+  ): [Update!]
+
   """
   The board log events.
   """
@@ -504,11 +791,6 @@ type Board {
   ): [Group]
 
   """
-  The unique identifier of the board.
-  """
-  id: ID!
-
-  """
   The Board's item nickname, one of a predefined set of values, or a custom user value
   """
   item_terminology: String
@@ -554,7 +836,8 @@ type Board {
   """
   The owner of the board.
   """
-  owner: User! @deprecated(reason: "This field returned creator of the board. Please use 'creator' or 'owners' fields instead.")
+  owner: User!
+    @deprecated(reason: "This field returned creator of the board. Please use 'creator' or 'owners' fields instead.")
 
   """
   List of user board owners
@@ -625,26 +908,6 @@ type Board {
   The last time the board was updated at.
   """
   updated_at: ISO8601DateTime
-
-  """
-  The board's updates.
-  """
-  updates(
-    """
-    A list of items unique identifiers.
-    """
-    ids: [ID!]
-
-    """
-    Number of items to get, the default is 25.
-    """
-    limit: Int = 25
-
-    """
-    Page number to get, starting at 1.
-    """
-    page: Int = 1
-  ): [Update]
 
   """
   The Board's url
@@ -759,11 +1022,6 @@ enum BoardObjectType {
 
 type BoardRelationValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -777,11 +1035,6 @@ type BoardRelationValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The linked items IDs
@@ -812,6 +1065,21 @@ type BoardRelationValue implements ColumnValue {
   The column's raw value in JSON format.
   """
   value: JSON
+}
+
+"""
+Options to order by.
+"""
+enum BoardsOrderBy {
+  """
+  The rank order of the board creation time (desc).
+  """
+  created_at
+
+  """
+  The last time the user making the request used the board (desc).
+  """
+  used_at
 }
 
 """
@@ -849,7 +1117,7 @@ type BoardView {
   settings_str: String!
 
   """
-  The view's template id if it was duplictated from other
+  The view's template id if it was duplicated from other view
   """
   source_view_id: ID
 
@@ -864,27 +1132,7 @@ type BoardView {
   view_specific_data_str: String!
 }
 
-"""
-Options to order by.
-"""
-enum BoardsOrderBy {
-  """
-  The rank order of the board creation time (desc).
-  """
-  created_at
-
-  """
-  The last time the user making the request used the board (desc).
-  """
-  used_at
-}
-
 type ButtonValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The button's color in hex value.
   """
@@ -899,11 +1147,6 @@ type ButtonValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The button's label.
@@ -939,11 +1182,6 @@ type ChangeTeamMembershipsResult {
 
 type CheckboxValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column's boolean value.
   """
   checked: Boolean
@@ -957,11 +1195,6 @@ type CheckboxValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -978,11 +1211,6 @@ type CheckboxValue implements ColumnValue {
 
 type ColorPickerValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The color in hex value.
   """
   color: String
@@ -996,11 +1224,6 @@ type ColorPickerValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -1085,6 +1308,8 @@ enum ColumnProperty {
   """
   title
 }
+
+union ColumnSettings = StatusColumnSettings | DropdownColumnSettings
 
 """
 The columns to create.
@@ -1262,7 +1487,7 @@ enum ColumnType {
   tags
 
   """
-  Assign a full team to an item 
+  Assign a full team to an item
   """
   team
 
@@ -1304,11 +1529,6 @@ enum ColumnType {
 
 interface ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -1317,11 +1537,6 @@ interface ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -1380,11 +1595,6 @@ type Country {
 
 type CountryValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -1398,11 +1608,6 @@ type CountryValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -1430,11 +1635,6 @@ input CreateDocBoardInput {
   Column id
   """
   column_id: String!
-
-  """
-  duplicate_content_from_doc_id to create doc from
-  """
-  duplicate_content_from_doc_id: ID
 
   """
   Item id
@@ -1469,12 +1669,62 @@ input CreateDocWorkspaceInput {
   workspace_id: ID!
 }
 
-type CreationLogValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
+input CreateDropdownColumnSettingsInput {
+  labels: [CreateDropdownLabelInput!]!
+}
 
+input CreateDropdownLabelInput {
+  label: String!
+}
+
+input CreateStatusColumnSettingsInput {
+  labels: [CreateStatusLabelInput!]!
+}
+
+input CreateStatusLabelInput {
+  label: String!
+  color: StatusColumnColors!
+  index: Int!
+  description: String
+  is_done: Boolean
+}
+
+"""
+Attributes of the team to be created.
+"""
+input CreateTeamAttributesInput {
+  """
+  The team's name.
+  """
+  name: String!
+
+  """
+  Whether the team can contain guest users.
+  """
+  is_guest_team: Boolean
+
+  """
+  The parent team identifier.
+  """
+  parent_team_id: ID
+
+  """
+  The team members. Must not be empty, unless allow_empty_team is set.
+  """
+  subscriber_ids: [ID!]
+}
+
+"""
+Options for creating a team.
+"""
+input CreateTeamOptionsInput {
+  """
+  Whether to allow a team without any subscribers.
+  """
+  allow_empty_team: Boolean
+}
+
+type CreationLogValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -1499,11 +1749,6 @@ type CreationLogValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -1515,6 +1760,53 @@ type CreationLogValue implements ColumnValue {
   The column's raw value in JSON format.
   """
   value: JSON
+}
+
+type CustomActivity {
+  id: ID
+  type: String
+  name: String
+  icon_id: CustomActivityIcon
+  color: CustomActivityColor
+}
+
+enum CustomActivityColor {
+  VIVID_CERULEAN
+  GO_GREEN
+  PHILIPPINE_GREEN
+  YANKEES_BLUE
+  CELTIC_BLUE
+  MEDIUM_TURQUOISE
+  CORNFLOWER_BLUE
+  MAYA_BLUE
+  SLATE_BLUE
+  GRAY
+  YELLOW_GREEN
+  DINGY_DUNGEON
+  PARADISE_PINK
+  BRINK_PINK
+  YELLOW_ORANGE
+  LIGHT_DEEP_PINK
+  LIGHT_HOT_PINK
+  PHILIPPINE_YELLOW
+}
+
+enum CustomActivityIcon {
+  ASCENDING
+  CAMERA
+  CONFERENCE
+  FLAG
+  GIFT
+  HEADPHONES
+  HOMEKEYS
+  LOCATION
+  PAPERPLANE
+  PLANE
+  NOTEBOOK
+  PLIERS
+  TRIPOD
+  TWOFLAGS
+  UTENCILS
 }
 
 """
@@ -1578,16 +1870,51 @@ type CustomFieldValue {
 }
 
 """
+API usage data.
+"""
+type DailyAnalytics {
+  """
+  Last time the API usage data was updated.
+  """
+  last_updated: ISO8601DateTime
+
+  """
+  API usage per day.
+  """
+  by_day: [PlatformApiDailyAnalyticsByDay!]!
+
+  """
+  API usage per app.
+  """
+  by_app: [PlatformApiDailyAnalyticsByApp!]!
+
+  """
+  API usage per user.
+  """
+  by_user: [PlatformApiDailyAnalyticsByUser!]!
+}
+
+"""
+Platform API daily limit.
+"""
+type DailyLimit {
+  """
+  Base daily limit.
+  """
+  base: Int
+
+  """
+  Total daily limit.
+  """
+  total: Int
+}
+
+"""
 A date.
 """
 scalar Date
 
 type DateValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -1607,11 +1934,6 @@ type DateValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The formatted date and time in user time zone.
@@ -1639,12 +1961,69 @@ type DateValue implements ColumnValue {
   value: JSON
 }
 
-type DependencyValue implements ColumnValue {
+"""
+Error that occurred during deactivation.
+"""
+type DeactivateUsersError {
   """
-  The board's unique identifier.
+  The error message.
   """
-  board_id: ID!
+  message: String
 
+  """
+  The error code.
+  """
+  code: DeactivateUsersErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes for deactivating users.
+"""
+enum DeactivateUsersErrorCode {
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of deactivating users.
+"""
+type DeactivateUsersResult {
+  """
+  The users that were deactivated.
+  """
+  deactivated_users: [User!]
+
+  """
+  Errors that occurred during deactivation.
+  """
+  errors: [DeactivateUsersError!]
+}
+
+type DeleteMarketplaceAppDiscount {
+  """
+  Slug of an account
+  """
+  account_slug: String!
+
+  """
+  The id of an app
+  """
+  app_id: ID!
+}
+
+type DeleteMarketplaceAppDiscountResult {
+  deleted_discount: DeleteMarketplaceAppDiscount!
+}
+
+type DependencyValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -1659,11 +2038,6 @@ type DependencyValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The linked items ids
@@ -1694,6 +2068,14 @@ type DependencyValue implements ColumnValue {
   The column's raw value in JSON format.
   """
   value: JSON
+}
+
+"""
+The period of a discount
+"""
+enum DiscountPeriod {
+  MONTHLY
+  YEARLY
 }
 
 """
@@ -1779,48 +2161,6 @@ enum DocBlockContentType {
   Video block
   """
   video
-}
-
-type DocValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
-  The column that this value belongs to.
-  """
-  column: Column!
-
-  """
-  The document file attached to the column.
-  """
-  file: FileDocValue
-
-  """
-  The column's unique identifier.
-  """
-  id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
-
-  """
-  Text representation of the column value. Note: Not all columns support textual value
-  """
-  text: String
-
-  """
-  The column's type.
-  """
-  type: ColumnType!
-
-  """
-  The column's raw value in JSON format.
-  """
-  value: JSON
 }
 
 """
@@ -1978,12 +2318,64 @@ type DocumentBlockIdOnly {
   id: String!
 }
 
-type DropdownValue implements ColumnValue {
+type DocValue implements ColumnValue {
   """
-  The board's unique identifier.
+  The column that this value belongs to.
   """
-  board_id: ID!
+  column: Column!
 
+  """
+  The document file attached to the column.
+  """
+  file: FileDocValue
+
+  """
+  The column's unique identifier.
+  """
+  id: ID!
+
+  """
+  Text representation of the column value. Note: Not all columns support textual value
+  """
+  text: String
+
+  """
+  The column's type.
+  """
+  type: ColumnType!
+
+  """
+  The column's raw value in JSON format.
+  """
+  value: JSON
+}
+
+type DropdownColumnSettings {
+  type: ManagedColumnTypes
+  labels: [DropdownLabel!]
+}
+
+type DropdownLabel {
+  id: Int
+  label: String
+  is_deactivated: Boolean
+}
+
+type DropdownManagedColumn {
+  id: String
+  title: String
+  description: String
+  settings_json: JSON
+  created_by: Int
+  updated_by: Int
+  revision: Int
+  state: ManagedColumnState
+  created_at: Date
+  updated_at: Date
+  settings: DropdownColumnSettings
+}
+
+type DropdownValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -1993,11 +2385,6 @@ type DropdownValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -2048,31 +2435,7 @@ enum DuplicateBoardType {
   duplicate_board_with_structure
 }
 
-input DynamicPosition {
-  """
-  A boolean flag indicating the desired position of the target item: set to true
-  to place the item after the reference object, or false to place it before.
-  """
-  is_after: Boolean = true
-
-  """
-  The unique identifier of the reference object relative to which the target item will be positioned.
-  """
-  object_id: String!
-
-  """
-  The type or category of the reference object, used to determine how the target
-  item should be positioned in relation to it.
-  """
-  object_type: ObjectType!
-}
-
 type EmailValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -2087,11 +2450,6 @@ type EmailValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The column's text value. It can be the same as email when user didn't enter any text.
@@ -2354,11 +2712,6 @@ enum FileLinkValueKind {
 
 type FileValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -2372,11 +2725,6 @@ type FileValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -2617,11 +2965,6 @@ enum FolderFontWeight {
 
 type FormulaValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -2630,11 +2973,6 @@ type FormulaValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -2650,6 +2988,70 @@ type FormulaValue implements ColumnValue {
   The column's raw value in JSON format.
   """
   value: JSON
+
+  """
+  A string representing all the formula values, separated by commas
+  """
+  display_value: String!
+}
+
+type GrantMarketplaceAppDiscount {
+  """
+  Number of days a discount will be valid
+  """
+  days_valid: Int!
+
+  """
+  Percentage value of a discount
+  """
+  discount: Int!
+
+  """
+  Is discount recurring
+  """
+  is_recurring: Boolean!
+  period: DiscountPeriod
+
+  """
+  List of app plan ids
+  """
+  app_plan_ids: [String!]!
+
+  """
+  The id of an app
+  """
+  app_id: ID!
+}
+
+input GrantMarketplaceAppDiscountData {
+  """
+  Number of days a discount will be valid
+  """
+  days_valid: Int!
+
+  """
+  Percentage value of a discount
+  """
+  discount: Int!
+
+  """
+  Is discount recurring
+  """
+  is_recurring: Boolean!
+
+  """
+  The period of a discount
+  """
+  period: DiscountPeriod
+
+  """
+  List of app plan ids
+  """
+  app_plan_ids: [String!]!
+}
+
+type GrantMarketplaceAppDiscountResult {
+  granted_discount: GrantMarketplaceAppDiscount!
 }
 
 """
@@ -2742,11 +3144,6 @@ enum GroupAttributes {
 
 type GroupValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -2767,11 +3164,6 @@ type GroupValue implements ColumnValue {
   id: ID!
 
   """
-  The item's unique identifier.
-  """
-  item_id: ID!
-
-  """
   Text representation of the column value. Note: Not all columns support textual value
   """
   text: String
@@ -2789,11 +3181,6 @@ type GroupValue implements ColumnValue {
 
 type HourValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -2807,11 +3194,6 @@ type HourValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Minute
@@ -2835,17 +3217,7 @@ type HourValue implements ColumnValue {
   value: JSON
 }
 
-"""
-An ISO 8601-encoded datetime
-"""
-scalar ISO8601DateTime
-
 type IntegrationValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -2872,11 +3244,6 @@ type IntegrationValue implements ColumnValue {
   issue_id: String
 
   """
-  The item's unique identifier.
-  """
-  item_id: ID!
-
-  """
   Text representation of the column value. Note: Not all columns support textual value
   """
   text: String
@@ -2893,9 +3260,81 @@ type IntegrationValue implements ColumnValue {
 }
 
 """
+Error that occurred while inviting users
+"""
+type InviteUsersError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: InviteUsersErrorCode
+
+  """
+  The email address for the user that caused the error.
+  """
+  email: ID
+}
+
+"""
+Error codes that can occur while changing email domain.
+"""
+enum InviteUsersErrorCode {
+  ERROR
+}
+
+"""
+Result of inviting users to the account.
+"""
+type InviteUsersResult {
+  """
+  The users that were successfully invited.
+  """
+  invited_users: [User!]
+
+  """
+  Errors that occurred while inviting users
+  """
+  errors: [InviteUsersError!]
+}
+
+"""
+An ISO 8601-encoded datetime (e.g., 2024-04-09T13:45:30Z)
+"""
+scalar ISO8601DateTime
+
+"""
 An item (table row).
 """
 type Item {
+  """
+  The item's unique identifier.
+  """
+  id: ID!
+
+  """
+  The item's updates.
+  """
+  updates(
+    """
+    Number of items to get, the default is 25.
+    """
+    limit: Int = 25
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+
+    """
+    A list of items unique identifiers.
+    """
+    ids: [ID!]
+  ): [Update!]
+
   """
   The item's assets/files.
   """
@@ -2957,11 +3396,6 @@ type Item {
   group: Group
 
   """
-  The item's unique identifier.
-  """
-  id: ID!
-
-  """
   The item's linked items
   """
   linked_items(
@@ -3012,37 +3446,12 @@ type Item {
   updated_at: Date
 
   """
-  The item's updates.
-  """
-  updates(
-    """
-    A list of items unique identifiers.
-    """
-    ids: [ID!]
-
-    """
-    Number of items to get, the default is 25.
-    """
-    limit: Int = 25
-
-    """
-    Page number to get, starting at 1.
-    """
-    page: Int = 1
-  ): [Update]
-
-  """
   The item's link
   """
   url: String!
 }
 
 type ItemIdValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -3244,7 +3653,7 @@ enum ItemsQueryRuleOperator {
   within_the_last
 
   """
-  Within the next 
+  Within the next
   """
   within_the_next
 }
@@ -3285,11 +3694,6 @@ enum Kind {
 
 type LastUpdatedValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -3298,11 +3702,6 @@ type LastUpdatedValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -3331,12 +3730,16 @@ type LastUpdatedValue implements ColumnValue {
   value: JSON
 }
 
-type LinkValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
+type Like {
+  id: ID!
+  creator_id: String
+  creator: User
+  reaction_type: String
+  created_at: Date
+  updated_at: Date
+}
 
+type LinkValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -3346,11 +3749,6 @@ type LinkValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -3386,11 +3784,6 @@ type LocationValue implements ColumnValue {
   address: String
 
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   City
   """
   city: String
@@ -3419,11 +3812,6 @@ type LocationValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Latitude
@@ -3479,11 +3867,6 @@ type LocationValue implements ColumnValue {
 
 type LongTextValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -3492,11 +3875,6 @@ type LongTextValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -3519,51 +3897,67 @@ type LongTextValue implements ColumnValue {
   value: JSON
 }
 
-type MirrorValue implements ColumnValue {
+type ManagedColumn {
+  id: String
+  title: String
+  description: String
+  settings_json: JSON
+  created_by: Int
+  updated_by: Int
+  revision: Int
+  state: ManagedColumnState
+  created_at: Date
+  updated_at: Date
+  settings: ColumnSettings
+}
+
+enum ManagedColumnState {
+  active
+  deleted
+  inactive
+}
+
+enum ManagedColumnTypes {
+  status
+  dropdown
+}
+
+type MarketplaceAppDiscount {
   """
-  The board's unique identifier.
+  Slug of an account
   """
-  board_id: ID!
+  account_slug: String!
 
   """
-  The column that this value belongs to.
+  The ID of an account
   """
-  column: Column!
+  account_id: ID!
 
   """
-  A string representing all the names of the linked items, separated by commas
+  Percentage value of a discount
   """
-  display_value: String!
+  discount: Int!
 
   """
-  The column's unique identifier.
+  Is discount recurring
   """
-  id: ID!
+  is_recurring: Boolean!
 
   """
-  The item's unique identifier.
+  List of app plan ids
   """
-  item_id: ID!
+  app_plan_ids: [String!]!
+  period: DiscountPeriod
 
   """
-  The mirrored items.
+  Date until a discount is valid
   """
-  mirrored_items: [MirroredItem!]!
+  valid_until: String!
 
   """
-  Text representation of the column value. Note: Not all columns support textual value
+  Date when a discount was created
   """
-  text: String
-
-  """
-  The column's type.
-  """
-  type: ColumnType!
-
-  """
-  The column's raw value in JSON format.
-  """
-  value: JSON
+  created_at: String!
 }
 
 type MirroredItem {
@@ -3591,12 +3985,382 @@ type MirroredItem {
 """
 Represents a mirrored value (column value, group, or board).
 """
-union MirroredValue = Board | BoardRelationValue | ButtonValue | CheckboxValue | ColorPickerValue | CountryValue | CreationLogValue | DateValue | DependencyValue | DocValue | DropdownValue | EmailValue | FileValue | FormulaValue | Group | GroupValue | HourValue | IntegrationValue | ItemIdValue | LastUpdatedValue | LinkValue | LocationValue | LongTextValue | MirrorValue | NumbersValue | PeopleValue | PersonValue | PhoneValue | ProgressValue | RatingValue | StatusValue | SubtasksValue | TagsValue | TeamValue | TextValue | TimeTrackingValue | TimelineValue | UnsupportedValue | VoteValue | WeekValue | WorldClockValue
+union MirroredValue =
+    Board
+  | BoardRelationValue
+  | ButtonValue
+  | CheckboxValue
+  | ColorPickerValue
+  | CountryValue
+  | CreationLogValue
+  | DateValue
+  | DependencyValue
+  | DocValue
+  | DropdownValue
+  | EmailValue
+  | FileValue
+  | FormulaValue
+  | Group
+  | GroupValue
+  | HourValue
+  | IntegrationValue
+  | ItemIdValue
+  | LastUpdatedValue
+  | LinkValue
+  | LocationValue
+  | LongTextValue
+  | MirrorValue
+  | NumbersValue
+  | PeopleValue
+  | PersonValue
+  | PhoneValue
+  | ProgressValue
+  | RatingValue
+  | StatusValue
+  | SubtasksValue
+  | TagsValue
+  | TeamValue
+  | TextValue
+  | TimeTrackingValue
+  | TimelineValue
+  | UnsupportedValue
+  | VoteValue
+  | WeekValue
+  | WorldClockValue
+
+type MirrorValue implements ColumnValue {
+  """
+  The column that this value belongs to.
+  """
+  column: Column!
+
+  """
+  A string representing all the names of the linked items, separated by commas
+  """
+  display_value: String!
+
+  """
+  The column's unique identifier.
+  """
+  id: ID!
+
+  """
+  The mirrored items.
+  """
+  mirrored_items: [MirroredItem!]!
+
+  """
+  Text representation of the column value. Note: Not all columns support textual value
+  """
+  text: String
+
+  """
+  The column's type.
+  """
+  type: ColumnType!
+
+  """
+  The column's raw value in JSON format.
+  """
+  value: JSON
+}
 
 """
 Update your monday.com data.
 """
 type Mutation {
+  """
+  Like an update.
+  """
+  like_update(
+    """
+    The update identifier.
+    """
+    update_id: ID!
+  ): Update
+  unlike_update(
+    """
+    The update identifier.
+    """
+    update_id: ID!
+  ): Update!
+
+  """
+  Delete an update.
+  """
+  delete_update(
+    """
+    The update's unique identifier.
+    """
+    id: ID!
+  ): Update
+  edit_update(
+    """
+    The update's unique identifier.
+    """
+    id: ID!
+
+    """
+    The update text.
+    """
+    body: String!
+  ): Update!
+  pin_to_top(
+    """
+    The update's unique identifier.
+    """
+    id: ID!
+
+    """
+    The item unique identifier.
+    """
+    item_id: ID
+  ): Update!
+  unpin_from_top(
+    """
+    The update's unique identifier.
+    """
+    id: ID!
+
+    """
+    The item unique identifier.
+    """
+    item_id: ID
+  ): Update!
+
+  """
+  Create a new update.
+  """
+  create_update(
+    """
+    The update text.
+    """
+    body: String!
+
+    """
+    The item's unique identifier.
+    """
+    item_id: ID
+
+    """
+    The parent post identifier.
+    """
+    parent_id: ID
+  ): Update
+  create_timeline_item(
+    """
+    The item the timeline item will be created in.
+    """
+    item_id: ID!
+
+    """
+    The user who created the timeline item. Only for account admins.
+    """
+    user_id: Int
+
+    """
+    The title of the timeline item.
+    """
+    title: String!
+
+    """
+    The creation time of the event.
+    """
+    timestamp: ISO8601DateTime!
+    summary: String
+    content: String
+
+    """
+    Location field value
+    """
+    location: String
+
+    """
+    Phone number field value
+    """
+    phone: String
+
+    """
+    URL field value
+    """
+    url: String
+
+    """
+    The start and end time of the new timeline item.
+    """
+    time_range: TimelineItemTimeRange
+
+    """
+    The id of the custom activity of the timeline item.
+    """
+    custom_activity_id: String!
+  ): TimelineItem
+  delete_timeline_item(
+    """
+    The id of the timeline item to delete
+    """
+    id: String!
+  ): TimelineItem
+  create_custom_activity(
+    """
+    The name of the custom activity
+    """
+    name: String!
+
+    """
+    The icon of the custom activity
+    """
+    icon_id: CustomActivityIcon!
+
+    """
+    The color of the custom activity
+    """
+    color: CustomActivityColor!
+  ): CustomActivity
+  delete_custom_activity(
+    """
+    The id of the custom activity
+    """
+    id: String!
+  ): CustomActivity
+
+  """
+  Create managed column of type dropdown mutation.
+  """
+  create_dropdown_managed_column(
+    """
+    The column title.
+    """
+    title: String!
+
+    """
+    The column description.
+    """
+    description: String
+    settings: CreateDropdownColumnSettingsInput
+  ): DropdownManagedColumn
+
+  """
+  Create managed column of type status mutation.
+  """
+  create_status_managed_column(
+    """
+    The column title.
+    """
+    title: String!
+
+    """
+    The column description.
+    """
+    description: String
+    settings: CreateStatusColumnSettingsInput
+  ): StatusManagedColumn
+
+  """
+  Update managed column of type dropdown mutation.
+  """
+  update_dropdown_managed_column(
+    """
+    The column id.
+    """
+    id: String!
+
+    """
+    The column title.
+    """
+    title: String
+
+    """
+    The column description.
+    """
+    description: String
+    settings: UpdateDropdownColumnSettingsInput
+
+    """
+    The column revision.
+    """
+    revision: Int!
+  ): DropdownManagedColumn
+
+  """
+  Update managed column of type status mutation.
+  """
+  update_status_managed_column(
+    """
+    The column id.
+    """
+    id: String!
+
+    """
+    The column title.
+    """
+    title: String
+
+    """
+    The column description.
+    """
+    description: String
+    settings: UpdateStatusColumnSettingsInput
+
+    """
+    The column revision.
+    """
+    revision: Int!
+  ): StatusManagedColumn
+
+  """
+  Activate managed column mutation.
+  """
+  activate_managed_column(
+    """
+    The column id.
+    """
+    id: String!
+  ): ManagedColumn
+
+  """
+  Deactivate managed column mutation.
+  """
+  deactivate_managed_column(
+    """
+    The column id.
+    """
+    id: String!
+  ): ManagedColumn
+
+  """
+  Delete managed column mutation.
+  """
+  delete_managed_column(
+    """
+    The column id.
+    """
+    id: String!
+  ): ManagedColumn
+  grant_marketplace_app_discount(
+    """
+    The id of an app
+    """
+    app_id: ID!
+
+    """
+    Slug of an account
+    """
+    account_slug: String!
+    data: GrantMarketplaceAppDiscountData!
+  ): GrantMarketplaceAppDiscountResult!
+  delete_marketplace_app_discount(
+    """
+    The id of an app
+    """
+    app_id: ID!
+
+    """
+    Slug of an account
+    """
+    account_slug: String!
+  ): DeleteMarketplaceAppDiscountResult!
+
   """
   Add a file to a column value.
   """
@@ -4107,11 +4871,6 @@ type Mutation {
     custom_icon: FolderCustomIcon
 
     """
-    Locate folder relatively to this item.
-    """
-    dynamic_position: DynamicPosition
-
-    """
     The folder's font weight.
     """
     font_weight: FolderFontWeight
@@ -4271,26 +5030,6 @@ type Mutation {
     """
     parent_item_id: ID!
   ): Item
-
-  """
-  Create a new update.
-  """
-  create_update(
-    """
-    The update text.
-    """
-    body: String!
-
-    """
-    The item's unique identifier.
-    """
-    item_id: ID
-
-    """
-    The parent post identifier.
-    """
-    parent_id: ID
-  ): Update
 
   """
   Create a new webhook.
@@ -4453,16 +5192,6 @@ type Mutation {
   ): [Team]
 
   """
-  Delete an update.
-  """
-  delete_update(
-    """
-    The update's unique identifier.
-    """
-    id: ID!
-  ): Update
-
-  """
   Delete users from a workspace.
   """
   delete_users_from_workspace(
@@ -4587,20 +5316,10 @@ type Mutation {
     increment_by: Int = 1
 
     """
-    Operation name. A string of up to 14 characters containing alphanumeric characters and the symbols -_ 
+    Operation name. A string of up to 14 characters containing alphanumeric characters and the symbols -_
     """
     kind: String = "global"
   ): AppSubscriptionOperationsCounter
-
-  """
-  Like an update.
-  """
-  like_update(
-    """
-    The update identifier.
-    """
-    update_id: ID
-  ): Update
 
   """
   Move an item to a different board.
@@ -4926,6 +5645,131 @@ type Mutation {
     """
     template_id: Int!
   ): Template
+
+  """
+  Creates a new team.
+  """
+  create_team(input: CreateTeamAttributesInput!, options: CreateTeamOptionsInput): Team
+
+  """
+  Activates the specified users.
+  """
+  activate_users(
+    """
+    The ids of the users to activate. (Limit: 200)
+    """
+    user_ids: [ID!]!
+  ): ActivateUsersResult
+
+  """
+  Deactivates the specified users.
+  """
+  deactivate_users(
+    """
+    The ids of the users to deactivate. (Limit: 200)
+    """
+    user_ids: [ID!]!
+  ): DeactivateUsersResult
+
+  """
+  Deletes the specified team.
+  """
+  delete_team(
+    """
+    The team to be deleted.
+    """
+    team_id: ID!
+  ): Team
+
+  """
+  Updates the role of the specified users.
+  """
+  update_users_role(
+    """
+    The ids of the users to update. (Limit: 200)
+    """
+    user_ids: [ID!]!
+
+    """
+    The base role name (e.g. admin, member, etc.)
+    """
+    new_role: BaseRoleName
+
+    """
+    The ID of a custom role
+    """
+    role_id: ID
+  ): UpdateUsersRoleResult
+
+  """
+  Assigns the specified users as owners of the specified team.
+  """
+  assign_team_owners(
+    """
+    The team identifier.
+    """
+    team_id: ID!
+
+    """
+    The user identifiers (max 200)
+    """
+    user_ids: [ID!]!
+  ): AssignTeamOwnersResult
+
+  """
+  Removes the specified users as owners of the specified team.
+  """
+  remove_team_owners(
+    """
+    The team identifier.
+    """
+    team_id: ID!
+
+    """
+    The user identifiers (max 200)
+    """
+    user_ids: [ID!]!
+  ): RemoveTeamOwnersResult
+
+  """
+  Updates the email domain for the specified users.
+  """
+  update_email_domain(input: UpdateEmailDomainAttributesInput!): UpdateEmailDomainResult
+
+  """
+  Updates attributes for users.
+  """
+  update_multiple_users(
+    """
+    List of user updates, each containing an ID and attribute updates.
+    """
+    user_updates: [UserUpdateInput!]!
+
+    """
+    Whether to bypass email confirmation for claimed domains.
+    """
+    bypass_confirmation_for_claimed_domains: Boolean
+  ): UpdateUserAttributesResult
+
+  """
+  Invite users to the account.
+  """
+  invite_users(
+    """
+    The emails of the users to invite.
+    """
+    emails: [String!]!
+
+    """
+    The new role of the users.
+    """
+    user_role: UserRole
+
+    """
+    The product to invite the users to
+    """
+    product: Product
+  ): InviteUsersResult
 }
 
 """
@@ -4958,27 +5802,7 @@ enum NotificationTargetType {
   Project
 }
 
-"""
-Indicates where the unit symbol should be placed in a number value
-"""
-enum NumberValueUnitDirection {
-  """
-  The symbol is placed on the left of the number
-  """
-  left
-
-  """
-  The symbol is placed on the right of the number
-  """
-  right
-}
-
 type NumbersValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -4993,11 +5817,6 @@ type NumbersValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Number
@@ -5022,23 +5841,18 @@ type NumbersValue implements ColumnValue {
 }
 
 """
-Represents a monday object.
+Indicates where the unit symbol should be placed in a number value
 """
-enum ObjectType {
+enum NumberValueUnitDirection {
   """
-  Represents a board object type.
+  The symbol is placed on the left of the number
   """
-  Board
+  left
 
   """
-  Represents a folder object type.
+  The symbol is placed on the right of the number
   """
-  Folder
-
-  """
-  Represents an overview object type.
-  """
-  Overview
+  right
 }
 
 """
@@ -5085,11 +5899,6 @@ type PeopleEntity {
 
 type PeopleValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -5098,11 +5907,6 @@ type PeopleValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The people and teams assigned to the item.
@@ -5128,11 +5932,6 @@ type PeopleValue implements ColumnValue {
 
 type PersonValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -5141,11 +5940,6 @@ type PersonValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The person assigned to the item.
@@ -5171,11 +5965,6 @@ type PersonValue implements ColumnValue {
 
 type PhoneValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -5189,11 +5978,6 @@ type PhoneValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Phone number
@@ -5243,6 +6027,71 @@ type Plan {
 }
 
 """
+The Platform API's data.
+"""
+type PlatformApi {
+  """
+  Platform API daily limit.
+  """
+  daily_limit: DailyLimit
+
+  """
+  API analytics.
+  """
+  daily_analytics: DailyAnalytics
+}
+
+"""
+API usage per app.
+"""
+type PlatformApiDailyAnalyticsByApp {
+  """
+  Application.
+  """
+  app: AppType
+
+  """
+  API usage for the app.
+  """
+  usage: Int!
+
+  """
+  API app id
+  """
+  api_app_id: ID!
+}
+
+"""
+API usage per day.
+"""
+type PlatformApiDailyAnalyticsByDay {
+  """
+  Day.
+  """
+  day: String!
+
+  """
+  API usage for the day.
+  """
+  usage: Int!
+}
+
+"""
+API usage per user.
+"""
+type PlatformApiDailyAnalyticsByUser {
+  """
+  User.
+  """
+  user: User!
+
+  """
+  API usage for the user.
+  """
+  usage: Int!
+}
+
+"""
 The position relative method.
 """
 enum PositionRelative {
@@ -5257,12 +6106,21 @@ enum PositionRelative {
   before_at
 }
 
-type ProgressValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
+"""
+The product to invite the users to.
+"""
+enum Product {
+  work_management
+  crm
+  dev
+  service
+  whiteboard
+  knowledge
+  forms
+  workflows
+}
 
+type ProgressValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -5272,11 +6130,6 @@ type ProgressValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -5298,6 +6151,116 @@ type ProgressValue implements ColumnValue {
 Get your data from monday.com
 """
 type Query {
+  """
+  Get a collection of updates.
+  """
+  updates(
+    """
+    Number of items to get, the default is 25.
+    """
+    limit: Int = 25
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+
+    """
+    A list of items unique identifiers.
+    """
+    ids: [ID!]
+  ): [Update!]
+  custom_activity(
+    """
+    The ids of the custom activities to fetch
+    """
+    ids: [String!]
+
+    """
+    The name of the custom activity, case insensitive and partial match
+    """
+    name: String
+
+    """
+    The icon of the custom activity
+    """
+    icon_id: CustomActivityIcon
+
+    """
+    The color of the custom activity
+    """
+    color: CustomActivityColor
+  ): [CustomActivity!]
+  timeline_item(
+    """
+    The id of the timeline item to delete
+    """
+    id: ID!
+  ): TimelineItem
+
+  """
+  Fetches timeline items for a given item
+  """
+  timeline(
+    """
+    The id of the item
+    """
+    id: ID!
+  ): TimelineResponse
+
+  """
+  Get managed column data.
+  """
+  managed_column(
+    """
+    The managed column ids.
+    """
+    id: [String!]
+
+    """
+    The state of the managed column.
+    """
+    state: [ManagedColumnState!]
+  ): [ManagedColumn!]
+  marketplace_app_discounts(
+    """
+    The id of an app
+    """
+    app_id: ID!
+  ): [MarketplaceAppDiscount!]!
+  app_subscriptions(
+    """
+    The ID of an app
+    """
+    app_id: ID!
+    status: SubscriptionStatus
+
+    """
+    The ID of an account
+    """
+    account_id: Int
+
+    """
+    The value, which identifies the exact point to continue fetching the subscriptions from
+    """
+    cursor: String
+
+    """
+    The size of the requested page
+    """
+    limit: Int
+  ): AppSubscriptions!
+
+  """
+  Get an app by ID.
+  """
+  app(
+    """
+    The ID of the app
+    """
+    id: ID!
+  ): AppType
+
   """
   Get the connected account's information.
   """
@@ -5338,7 +6301,7 @@ type Query {
   """
   app_subscription_operations(
     """
-    Operation name. A string of up to 14 characters containing alphanumeric characters and the symbols -_ 
+    Operation name. A string of up to 14 characters containing alphanumeric characters and the symbols -_
     """
     kind: String = "global"
   ): AppSubscriptionOperationsCounter
@@ -5573,26 +6536,6 @@ type Query {
   ): [Team]
 
   """
-  Get a collection of updates.
-  """
-  updates(
-    """
-    A list of items unique identifiers.
-    """
-    ids: [ID!]
-
-    """
-    Number of items to get, the default is 25.
-    """
-    limit: Int = 25
-
-    """
-    Page number to get, starting at 1.
-    """
-    page: Int = 1
-  ): [Update]
-
-  """
   Get a collection of users.
   """
   users(
@@ -5636,16 +6579,6 @@ type Query {
     """
     page: Int
   ): [User]
-
-  """
-  Get the API version in use
-  """
-  version: Version!
-
-  """
-  Get a list containing the versions of the API
-  """
-  versions: [Version!]!
 
   """
   Get a collection of webhooks for the board
@@ -5696,14 +6629,29 @@ type Query {
     """
     state: State = active
   ): [Workspace]
+
+  """
+  Get the API version in use
+  """
+  version: Version!
+
+  """
+  Get a list containing the versions of the API
+  """
+  versions: [Version!]
+
+  """
+  Platform API data.
+  """
+  platform_api: PlatformApi
+
+  """
+  Get all roles for the account
+  """
+  account_roles: [AccountRole!]
 }
 
 type RatingValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -5713,11 +6661,6 @@ type RatingValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Rating value
@@ -5742,13 +6685,91 @@ type RatingValue implements ColumnValue {
 }
 
 """
+Error that occurred while removing team owners.
+"""
+type RemoveTeamOwnersError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: RemoveTeamOwnersErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes that can occur while removing team owners.
+"""
+enum RemoveTeamOwnersErrorCode {
+  VIEWERS_OR_GUESTS
+  USER_NOT_MEMBER_OF_TEAM
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of removing the team's ownership.
+"""
+type RemoveTeamOwnersResult {
+  """
+  The team for which the owners were removed.
+  """
+  team: Team
+
+  """
+  Errors that occurred while removing team owners.
+  """
+  errors: [RemoveTeamOwnersError!]
+}
+
+"""
 A reply for an update.
 """
 type Reply {
   """
+  The reply's unique identifier.
+  """
+  id: ID!
+
+  """
   The reply's html formatted body.
   """
   body: String!
+  kind: String!
+
+  """
+  The unique identifier of the reply creator.
+  """
+  creator_id: String
+  edited_at: Date!
+
+  """
+  The reply's creator.
+  """
+  creator: User
+  likes: [Like!]!
+  pinned_to_top: [UpdatePin!]!
+  viewers(
+    """
+    Number of items to get, the default is 100.
+    """
+    limit: Int = 100
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+  ): [Watcher!]!
 
   """
   The reply's creation date.
@@ -5756,29 +6777,14 @@ type Reply {
   created_at: Date
 
   """
-  The reply's creator.
+  The reply's last edit date.
   """
-  creator: User
-
-  """
-  The unique identifier of the reply creator.
-  """
-  creator_id: String
-
-  """
-  The reply's unique identifier.
-  """
-  id: ID!
+  updated_at: Date
 
   """
   The reply's text body.
   """
   text_body: String
-
-  """
-  The reply's last edit date.
-  """
-  updated_at: Date
 }
 
 """
@@ -5806,6 +6812,64 @@ enum State {
   deleted
 }
 
+enum StatusColumnColors {
+  working_orange
+  done_green
+  stuck_red
+  dark_blue
+  purple
+  explosive
+  grass_green
+  bright_blue
+  saladish
+  egg_yolk
+  blackish
+  dark_red
+  sofia_pink
+  lipstick
+  dark_purple
+  bright_green
+  chili_blue
+  american_gray
+  brown
+  dark_orange
+  sunset
+  bubble
+  peach
+  berry
+  winter
+  river
+  navy
+  aquamarine
+  indigo
+  dark_indigo
+  pecan
+  lavender
+  royal
+  steel
+  orchid
+  lilac
+  tan
+  sky
+  coffee
+  teal
+}
+
+type StatusColumnSettings {
+  type: ManagedColumnTypes
+  labels: [StatusLabel!]
+}
+
+type StatusLabel {
+  id: Int
+  label: String
+  color: StatusColumnColors
+  index: Int
+  description: String
+  is_deactivated: Boolean
+  is_done: Boolean
+}
+
 """
 A status label style.
 """
@@ -5821,12 +6885,21 @@ type StatusLabelStyle {
   color: String!
 }
 
-type StatusValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
+type StatusManagedColumn {
+  id: String
+  title: String
+  description: String
+  settings_json: JSON
+  created_by: Int
+  updated_by: Int
+  revision: Int
+  state: ManagedColumnState
+  created_at: Date
+  updated_at: Date
+  settings: StatusColumnSettings
+}
 
+type StatusValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -5846,11 +6919,6 @@ type StatusValue implements ColumnValue {
   Whether the status is done
   """
   is_done: Boolean
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The label of the status
@@ -5884,12 +6952,51 @@ type StatusValue implements ColumnValue {
   value: JSON
 }
 
-type SubtasksValue implements ColumnValue {
+"""
+The discounts granted to the subscription
+"""
+type SubscriptionDiscount {
   """
-  The board's unique identifier.
+  The value of the discount in percentage (e.g. the value 80 refers to 80%)
   """
-  board_id: ID!
+  value: Int!
+  discount_model_type: SubscriptionDiscountModelType!
+  discount_type: SubscriptionDiscountType!
+}
 
+"""
+The information whether the discount is percentage or nominal
+"""
+enum SubscriptionDiscountModelType {
+  percent
+  nominal
+}
+
+"""
+The information whether the discount has been granted one time or recurring
+"""
+enum SubscriptionDiscountType {
+  recurring
+  one_time
+}
+
+"""
+The billing period of the subscription. Possible values: monthly, yearly
+"""
+enum SubscriptionPeriodType {
+  monthly
+  yearly
+}
+
+"""
+The status of the subscription. Possible values: active, inactive.
+"""
+enum SubscriptionStatus {
+  active
+  inactive
+}
+
+type SubtasksValue implements ColumnValue {
   """
   The column that this value belongs to.
   """
@@ -5904,11 +7011,6 @@ type SubtasksValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The subitems
@@ -5958,11 +7060,6 @@ type Tag {
 
 type TagsValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -5971,11 +7068,6 @@ type TagsValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Tag ID's
@@ -6007,11 +7099,6 @@ type Team {
   The team's unique identifier.
   """
   id: ID!
-
-  """
-  The team's name.
-  """
-  name: String!
 
   """
   The users who are the owners of the team.
@@ -6072,14 +7159,19 @@ type Team {
     """
     page: Int
   ): [User]
+
+  """
+  The team's name.
+  """
+  name: String!
+
+  """
+  Whether the team is a guest team
+  """
+  is_guest: Boolean
 }
 
 type TeamValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -6089,11 +7181,6 @@ type TeamValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   ID of the assigned team
@@ -6129,11 +7216,6 @@ type Template {
 
 type TextValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -6142,11 +7224,6 @@ type TextValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The column's textual value
@@ -6162,6 +7239,134 @@ type TextValue implements ColumnValue {
   The column's raw value in JSON format.
   """
   value: JSON
+}
+
+type TimelineItem {
+  id: ID
+  type: String
+
+  """
+  The item that the timeline item is on.
+  """
+  item: Item
+
+  """
+  The board that the timeline item is on.
+  """
+  board: Board
+
+  """
+  The user who created the timeline item.
+  """
+  user: User
+
+  """
+  The title of the timeline item.
+  """
+  title: String
+
+  """
+  The external ID of the custom activity of the timeline item.
+  """
+  custom_activity_id: String
+
+  """
+  The content of the timeline item.
+  """
+  content: String
+
+  """
+  The creation date of the timeline item.
+  """
+  created_at: Date!
+}
+
+type TimelineItemsPage {
+  """
+  The timeline items in the current page
+  """
+  timeline_items: [TimelineItem!]!
+
+  """
+  Cursor for fetching the next page
+  """
+  cursor: String
+}
+
+input TimelineItemTimeRange {
+  """
+  Start time
+  """
+  start_timestamp: ISO8601DateTime!
+
+  """
+  End time
+  """
+  end_timestamp: ISO8601DateTime!
+}
+
+type TimelineResponse {
+  """
+  Paginated set of timeline items and a cursor to get the next page
+  """
+  timeline_items_page(
+    """
+    The cursor for the next set of timeline items
+    """
+    cursor: String = null
+
+    """
+    The limit for the current page of timeline items
+    """
+    limit: Int = 25
+  ): TimelineItemsPage!
+}
+
+type TimelineValue implements ColumnValue {
+  """
+  The column that this value belongs to.
+  """
+  column: Column!
+
+  """
+  The start date of the timeline
+  """
+  from: Date
+
+  """
+  The column's unique identifier.
+  """
+  id: ID!
+
+  """
+  The range of dates representing the timeline (YYYY-MM-DD)
+  """
+  text: String
+
+  """
+  The end date of the timeline
+  """
+  to: Date
+
+  """
+  The column's type.
+  """
+  type: ColumnType!
+
+  """
+  The date when column value was last updated.
+  """
+  updated_at: Date
+
+  """
+  The column's raw value in JSON format.
+  """
+  value: JSON
+
+  """
+  The visualization type for the timeline
+  """
+  visualization_type: String
 }
 
 type TimeTrackingHistoryItem {
@@ -6228,11 +7433,6 @@ type TimeTrackingHistoryItem {
 
 type TimeTrackingValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -6247,11 +7447,6 @@ type TimeTrackingValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Whether the time tracker is running
@@ -6276,70 +7471,8 @@ type TimeTrackingValue implements ColumnValue {
   value: JSON
 }
 
-type TimelineValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
-  The column that this value belongs to.
-  """
-  column: Column!
-
-  """
-  The start date of the timeline
-  """
-  from: Date
-
-  """
-  The column's unique identifier.
-  """
-  id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
-
-  """
-  The range of dates representing the timeline (YYYY-MM-DD)
-  """
-  text: String
-
-  """
-  The end date of the timeline
-  """
-  to: Date
-
-  """
-  The column's type.
-  """
-  type: ColumnType!
-
-  """
-  The date when column value was last updated.
-  """
-  updated_at: Date
-
-  """
-  The column's raw value in JSON format.
-  """
-  value: JSON
-
-  """
-  The visualization type for the timeline
-  """
-  visualization_type: String
-}
-
 type UnsupportedValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -6348,11 +7481,6 @@ type UnsupportedValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   Text representation of the column value. Note: Not all columns support textual value
@@ -6375,9 +7503,9 @@ An update.
 """
 type Update {
   """
-  The update's assets/files.
+  The update's unique identifier.
   """
-  assets: [Asset]
+  id: ID!
 
   """
   The update's html formatted body.
@@ -6385,44 +7513,240 @@ type Update {
   body: String!
 
   """
-  The update's creation date.
+  The unique identifier of the update creator.
   """
-  created_at: Date
+  creator_id: String
+  edited_at: Date!
 
   """
   The update's creator.
   """
   creator: User
+  likes: [Like!]!
+  pinned_to_top: [UpdatePin!]!
+  viewers(
+    """
+    Number of items to get, the default is 100.
+    """
+    limit: Int = 100
+
+    """
+    Page number to get, starting at 1.
+    """
+    page: Int = 1
+  ): [Watcher!]!
 
   """
-  The unique identifier of the update creator.
+  The update's creation date.
   """
-  creator_id: String
-
-  """
-  The update's unique identifier.
-  """
-  id: ID!
-
-  """
-  The update's item ID.
-  """
-  item_id: String
-
-  """
-  The update's replies.
-  """
-  replies: [Reply]
-
-  """
-  The update's text body.
-  """
-  text_body: String
+  created_at: Date
 
   """
   The update's last edit date.
   """
   updated_at: Date
+
+  """
+  The update's item ID.
+  """
+  item_id: String
+  item: Item
+
+  """
+  The update's replies.
+  """
+  replies: [Reply!]
+
+  """
+  The update's assets/files.
+  """
+  assets: [Asset]
+
+  """
+  The update's text body.
+  """
+  text_body: String
+}
+
+input UpdateDropdownColumnSettingsInput {
+  labels: [UpdateDropdownLabelInput!]!
+}
+
+input UpdateDropdownLabelInput {
+  label: String!
+  id: Int
+  is_deactivated: Boolean
+}
+
+"""
+Attributes of the email domain to be updated.
+"""
+input UpdateEmailDomainAttributesInput {
+  """
+  The user identifiers (max 200)
+  """
+  user_ids: [ID!]!
+
+  """
+  The new email domain.
+  """
+  new_domain: String!
+}
+
+"""
+Error that occurred while changing email domain.
+"""
+type UpdateEmailDomainError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: UpdateEmailDomainErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes that can occur while changing email domain.
+"""
+enum UpdateEmailDomainErrorCode {
+  UPDATE_EMAIL_DOMAIN_ERROR
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of updating the email domain for the specified users.
+"""
+type UpdateEmailDomainResult {
+  """
+  The users for which the email domain was updated.
+  """
+  updated_users: [User!]
+
+  """
+  Errors that occurred during the update.
+  """
+  errors: [UpdateEmailDomainError!]
+}
+
+"""
+The pin to top data of the update.
+"""
+type UpdatePin {
+  item_id: ID!
+}
+
+input UpdateStatusColumnSettingsInput {
+  labels: [UpdateStatusLabelInput!]!
+}
+
+input UpdateStatusLabelInput {
+  label: String!
+  color: StatusColumnColors!
+  index: Int!
+  description: String
+  is_done: Boolean
+  id: Int
+  is_deactivated: Boolean
+}
+
+"""
+Error that occurred while updating users attributes.
+"""
+type UpdateUserAttributesError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: UpdateUserAttributesErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes that can occur while updating user attributes.
+"""
+enum UpdateUserAttributesErrorCode {
+  INVALID_FIELD
+}
+
+"""
+The result of updating users attributes.
+"""
+type UpdateUserAttributesResult {
+  """
+  The users that were updated.
+  """
+  updated_users: [User!]
+
+  """
+  Errors that occurred during the update.
+  """
+  errors: [UpdateUserAttributesError!]
+}
+
+"""
+Error that occurred during updating users role.
+"""
+type UpdateUsersRoleError {
+  """
+  The error message.
+  """
+  message: String
+
+  """
+  The error code.
+  """
+  code: UpdateUsersRoleErrorCode
+
+  """
+  The id of the user that caused the error.
+  """
+  user_id: ID
+}
+
+"""
+Error codes for updating users roles.
+"""
+enum UpdateUsersRoleErrorCode {
+  EXCEEDS_BATCH_LIMIT
+  INVALID_INPUT
+  USER_NOT_FOUND
+  CANNOT_UPDATE_SELF
+  FAILED
+}
+
+"""
+Result of updating users role.
+"""
+type UpdateUsersRoleResult {
+  """
+  The users that were updated.
+  """
+  updated_users: [User!]
+
+  """
+  Errors that occurred during updating users role.
+  """
+  errors: [UpdateUsersRoleError!]
 }
 
 """
@@ -6450,9 +7774,19 @@ A monday.com user.
 """
 type User {
   """
+  The user's unique identifier.
+  """
+  id: ID!
+
+  """
   The user's account.
   """
   account: Account!
+
+  """
+  The products the user is assigned to.
+  """
+  account_products: [AccountProduct!]
 
   """
   The user's birthday.
@@ -6495,9 +7829,9 @@ type User {
   enabled: Boolean!
 
   """
-  The user's unique identifier.
+  The token of the user for email to board.
   """
-  id: ID!
+  encrypt_api_token: String
 
   """
   Is the user an account admin.
@@ -6621,6 +7955,56 @@ type User {
 }
 
 """
+The attributes to update for a user.
+"""
+input UserAttributesInput {
+  """
+  The birthday of the user.
+  """
+  birthday: String
+
+  """
+  The email of the user.
+  """
+  email: String
+
+  """
+  The join date of the user.
+  """
+  join_date: String
+
+  """
+  The name of the user.
+  """
+  name: String
+
+  """
+  The location of the user.
+  """
+  location: String
+
+  """
+  The mobile phone of the user.
+  """
+  mobile_phone: String
+
+  """
+  The phone of the user.
+  """
+  phone: String
+
+  """
+  The title of the user.
+  """
+  title: String
+
+  """
+  The department of the user.
+  """
+  department: String
+}
+
+"""
 The possibilities for a user kind.
 """
 enum UserKind {
@@ -6643,6 +8027,22 @@ enum UserKind {
   All non pending members.
   """
   non_pending
+}
+
+"""
+The role of the user.
+"""
+enum UserRole {
+  PORTAL_USER
+  GUEST
+  VIEW_ONLY
+  MEMBER
+  ADMIN
+}
+
+input UserUpdateInput {
+  user_id: ID!
+  user_attribute_updates: UserAttributesInput!
 }
 
 """
@@ -6712,11 +8112,6 @@ enum VersionKind {
 
 type VoteValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -6725,11 +8120,6 @@ type VoteValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """
@@ -6761,6 +8151,15 @@ type VoteValue implements ColumnValue {
   A list of users who voted
   """
   voters: [User!]!
+}
+
+"""
+The viewer of the update.
+"""
+type Watcher {
+  user_id: ID!
+  medium: String!
+  user: User
 }
 
 """
@@ -6900,11 +8299,6 @@ enum WebhookEventType {
 
 type WeekValue implements ColumnValue {
   """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
-  """
   The column that this value belongs to.
   """
   column: Column!
@@ -6918,11 +8312,6 @@ type WeekValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
 
   """
   The start date of the week
@@ -7098,6 +8487,16 @@ type WorkspaceSettings {
 }
 
 """
+Options to order by.
+"""
+enum WorkspacesOrderBy {
+  """
+  The rank order of the workspace creation time (desc).
+  """
+  created_at
+}
+
+"""
 The workspace subscriber kind.
 """
 enum WorkspaceSubscriberKind {
@@ -7112,22 +8511,7 @@ enum WorkspaceSubscriberKind {
   subscriber
 }
 
-"""
-Options to order by.
-"""
-enum WorkspacesOrderBy {
-  """
-  The rank order of the workspace creation time (desc).
-  """
-  created_at
-}
-
 type WorldClockValue implements ColumnValue {
-  """
-  The board's unique identifier.
-  """
-  board_id: ID!
-
   """
   The column that this value belongs to.
   """
@@ -7137,11 +8521,6 @@ type WorldClockValue implements ColumnValue {
   The column's unique identifier.
   """
   id: ID!
-
-  """
-  The item's unique identifier.
-  """
-  item_id: ID!
   text: String
 
   """

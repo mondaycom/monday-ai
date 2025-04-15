@@ -371,3 +371,60 @@ export const generateTypeDetailsQuery = (typeName: string) => gql`
     }
   }
 `;
+
+export const createCustomActivity = gql`
+  mutation createCustomActivity($color: CustomActivityColor!, $icon_id: CustomActivityIcon!, $name: String!) {
+    create_custom_activity(color: $color, icon_id: $icon_id, name: $name) {
+      color
+      icon_id
+      name
+    }
+  }
+`;
+
+export const createTimelineItem = gql`
+  mutation createTimelineItem(
+    $item_id: ID!
+    $custom_activity_id: String!
+    $title: String!
+    $summary: String
+    $content: String
+    $timestamp: ISO8601DateTime!
+    $time_range: TimelineItemTimeRange
+    $location: String
+    $phone: String
+    $url: String
+  ) {
+    create_timeline_item(
+      item_id: $item_id
+      custom_activity_id: $custom_activity_id
+      title: $title
+      summary: $summary
+      content: $content
+      timestamp: $timestamp
+      time_range: $time_range
+      location: $location
+      phone: $phone
+      url: $url
+    ) {
+      id
+      title
+      content
+      created_at
+      custom_activity_id
+      type
+    }
+  }
+`;
+
+export const fetchCustomActivity = gql`
+  query fetchCustomActivity {
+    custom_activity {
+      color
+      icon_id
+      id
+      name
+      type
+    }
+  }
+`;
