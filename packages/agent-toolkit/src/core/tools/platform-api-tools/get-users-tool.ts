@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { getUsersByName } from '../../monday-graphql/queries.graphql';
-import { GetUsersByNameQuery, GetUsersByNameQueryVariables } from '../../monday-graphql/generated/graphql';
+import { getUsersByName } from '../../../monday-graphql/queries.graphql';
+import { GetUsersByNameQuery, GetUsersByNameQueryVariables } from '../../../monday-graphql/generated/graphql';
 
 export const getUsersToolSchema = {
   name: z.string().optional().describe('The name or partial name of the user to get'),

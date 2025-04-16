@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
-import { createItem } from '../../monday-graphql/queries.graphql';
-import { CreateItemMutation, CreateItemMutationVariables } from '../../monday-graphql/generated/graphql';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { createItem } from '../../../monday-graphql/queries.graphql';
+import { CreateItemMutation, CreateItemMutationVariables } from '../../../monday-graphql/generated/graphql';
 
 export const createItemToolSchema = {
   name: z.string().describe("The name of the new item to be created, must be relevant to the user's request"),

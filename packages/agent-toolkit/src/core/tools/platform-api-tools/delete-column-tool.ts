@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
-import { deleteColumn } from '../../monday-graphql/queries.graphql';
-import { DeleteColumnMutation, DeleteColumnMutationVariables } from '../../monday-graphql/generated/graphql';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { deleteColumn } from '../../../monday-graphql/queries.graphql';
+import { DeleteColumnMutation, DeleteColumnMutationVariables } from '../../../monday-graphql/generated/graphql';
 
 export const deleteColumnToolSchema = {
   columnId: z.string().describe('The id of the column to be deleted'),

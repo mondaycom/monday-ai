@@ -1,10 +1,13 @@
 import { z } from 'zod';
-import { ToolOutputType } from '../tool';
-import { ToolInputType } from '../tool';
+import { ToolOutputType } from '../../tool';
+import { ToolInputType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolType } from '../tool';
-import { CreateTimelineItemMutation, CreateTimelineItemMutationVariables } from 'src/monday-graphql/generated/graphql';
-import { createTimelineItem } from 'src/monday-graphql/queries.graphql';
+import { ToolType } from '../../tool';
+import {
+  CreateTimelineItemMutation,
+  CreateTimelineItemMutationVariables,
+} from '../../../monday-graphql/generated/graphql';
+import { createTimelineItem } from '../../../monday-graphql/queries.graphql';
 
 export const createTimelineItemToolSchema = {
   item_id: z.number().describe('The ID of the item to create the new timeline item on'),

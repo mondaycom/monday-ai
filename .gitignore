@@ -137,3 +137,7 @@ dist
 
 # turbo
 .turbo
+
+.mappsrc
+
+.idea/

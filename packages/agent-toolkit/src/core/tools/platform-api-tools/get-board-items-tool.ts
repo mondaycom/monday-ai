@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { getBoardItemsByName } from '../../monday-graphql/queries.graphql';
-import { GetBoardItemsByNameQuery, GetBoardItemsByNameQueryVariables } from '../../monday-graphql/generated/graphql';
+import { getBoardItemsByName } from '../../../monday-graphql/queries.graphql';
+import { GetBoardItemsByNameQuery, GetBoardItemsByNameQueryVariables } from '../../../monday-graphql/generated/graphql';
 
 export const getItemsToolSchema = {
   term: z.string(),

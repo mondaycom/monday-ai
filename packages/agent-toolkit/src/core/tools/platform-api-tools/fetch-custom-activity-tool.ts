@@ -1,9 +1,9 @@
-import { ToolOutputType } from '../tool';
-import { ToolInputType } from '../tool';
+import { ToolOutputType } from '../../tool';
+import { ToolInputType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolType } from '../tool';
-import { FetchCustomActivityQuery } from 'src/monday-graphql/generated/graphql';
-import { fetchCustomActivity } from 'src/monday-graphql/queries.graphql';
+import { ToolType } from '../../tool';
+import { FetchCustomActivityQuery } from '../../../monday-graphql/generated/graphql';
+import { fetchCustomActivity } from '../../../monday-graphql/queries.graphql';
 
 export const fetchCustomActivityToolSchema = {};
 

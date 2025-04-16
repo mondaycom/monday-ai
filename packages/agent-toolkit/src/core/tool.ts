@@ -14,6 +14,7 @@ export enum ToolType {
   QUERY = 'query',
   MUTATION = 'mutation',
   ALL_API = 'all_api',
+  MONDAY_APPS = 'monday_apps',
 }
 
 export interface Tool<Input extends ZodRawShape | undefined, Output extends Record<string, unknown> = never>

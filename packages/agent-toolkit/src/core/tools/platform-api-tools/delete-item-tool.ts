@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { deleteItem } from '../../monday-graphql/queries.graphql';
-import { DeleteItemMutation, DeleteItemMutationVariables } from '../../monday-graphql/generated/graphql';
-import { ToolInputType, ToolOutputType, ToolType } from '../tool';
+import { deleteItem } from '../../../monday-graphql/queries.graphql';
+import { DeleteItemMutation, DeleteItemMutationVariables } from '../../../monday-graphql/generated/graphql';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 
 export const deleteItemToolSchema = {
   itemId: z.number(),

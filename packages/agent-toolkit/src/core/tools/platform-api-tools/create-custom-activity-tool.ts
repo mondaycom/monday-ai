@@ -4,12 +4,12 @@ import {
   CreateCustomActivityMutationVariables,
   CustomActivityColor,
   CustomActivityIcon,
-} from '../../monday-graphql/generated/graphql';
-import { ToolOutputType } from '../tool';
-import { ToolInputType } from '../tool';
+} from '../../../monday-graphql/generated/graphql';
+import { ToolOutputType } from '../../tool';
+import { ToolInputType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolType } from '../tool';
-import { createCustomActivity } from '../../monday-graphql/queries.graphql';
+import { ToolType } from '../../tool';
+import { createCustomActivity } from '../../../monday-graphql/queries.graphql';
 
 export const createCustomActivityToolSchema = {
   color: z.nativeEnum(CustomActivityColor).describe('The color of the custom activity'),
