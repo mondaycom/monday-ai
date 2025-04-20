@@ -46,7 +46,6 @@ export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
   async execute(input: ToolInputType<CreateColumnToolInput>): Promise<ToolOutputType<never>> {
     const boardId = this.context?.boardId ?? (input as ToolInputType<typeof createColumnInBoardToolSchema>).boardId;
     
-    let a;
     let columnSettings: string | undefined;
     if (input.columnSettings && input.columnType === ColumnType.Status) {
       columnSettings = JSON.stringify({
@@ -58,7 +57,6 @@ export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
           labels: input.columnSettings.map((label: string, i: number) => ({id: i + 1, name: label})),
         },
       });
-      a = columnSettings
     }
 
     const variables: CreateColumnMutationVariables = {
@@ -72,7 +70,7 @@ export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
     const res = await this.mondayApi.request<CreateColumnMutation>(createColumn, variables);
 
     return {
-      content: `Column ${res.create_column?.id} successfully created a: ${a}`,
+      content: `Column ${res.create_column?.id} successfully created`,
     };
   }
 }
