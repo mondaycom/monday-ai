@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,6 +7,7 @@ import { AppFeaturesResponse, getAppFeaturesSchema } from './schemas/app-feature
 export class GetAppFeaturesTool extends BaseMondayAppsTool<typeof getAppFeaturesSchema.shape, AppFeaturesResponse> {
   name = 'monday_apps_get_app_features';
   category = MondayAppsToolCategory.APP_FEATURE;
+  subType: ToolSubType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Retrieve app features by app version id';

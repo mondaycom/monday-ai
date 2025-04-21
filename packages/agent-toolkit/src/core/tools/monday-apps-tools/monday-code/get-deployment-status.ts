@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -10,6 +10,7 @@ export class GetDeploymentStatusTool extends BaseMondayAppsTool<
 > {
   name = 'monday_apps_get_deployment_status';
   category = MondayAppsToolCategory.MONDAY_CODE;
+  subType: ToolSubType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Get the deployment status for a specific app version';

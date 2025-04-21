@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -10,6 +10,7 @@ export class RemoveAppStorageDataTool extends BaseMondayAppsTool<
 > {
   name = 'monday_apps_remove_app_storage_data';
   category = MondayAppsToolCategory.STORAGE;
+  subType: ToolSubType = ToolSubType.WRITE;
 
   getDescription(): string {
     return 'Remove all storage data for a specific account on a specific app';

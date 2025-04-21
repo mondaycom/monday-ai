@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolSubType, ToolSubType, ToolType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { createColumn } from '../../../monday-graphql/queries.graphql';
 import {

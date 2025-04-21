@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from 'src/core/tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from 'src/core/tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -10,6 +10,7 @@ export class SearchStorageRecordsTool extends BaseMondayAppsTool<
 > {
   name = 'monday_apps_search_storage_records';
   category = MondayAppsToolCategory.STORAGE;
+  subType: ToolSubType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Search for storage records in a Monday.com app';

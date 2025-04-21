@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,6 +7,7 @@ import { EnvVarResponse, setEnvVarSchema } from './schemas/code-schemas';
 export class SetEnvironmentVariableTool extends BaseMondayAppsTool<typeof setEnvVarSchema.shape, EnvVarResponse> {
   name = 'monday_apps_set_environment_variable';
   category = MondayAppsToolCategory.MONDAY_CODE;
+  subType: ToolSubType = ToolSubType.WRITE;
 
   getDescription(): string {
     return 'Set an environment variable for an app';

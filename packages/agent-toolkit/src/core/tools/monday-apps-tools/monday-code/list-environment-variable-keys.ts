@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -10,6 +10,7 @@ export class ListEnvironmentVariableKeysTool extends BaseMondayAppsTool<
 > {
   name = 'monday_apps_list_environment_variable_keys';
   category = MondayAppsToolCategory.MONDAY_CODE;
+  subType: ToolSubType = ToolSubType.READ;
 
   getDescription(): string {
     return 'List all environment variable keys for an app';

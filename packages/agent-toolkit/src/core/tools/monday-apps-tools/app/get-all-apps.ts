@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,6 +7,7 @@ import { AppApiDataResponse } from './schemas/app-schemas';
 export class GetAllAppsTool extends BaseMondayAppsTool<undefined, AppApiDataResponse> {
   name = 'monday_apps_get_all_apps';
   category = MondayAppsToolCategory.APP;
+  subType: ToolSubType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Retrieve all the development apps that the user has collaboration permissions for';

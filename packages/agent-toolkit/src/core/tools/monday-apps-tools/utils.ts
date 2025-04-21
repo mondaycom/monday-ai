@@ -1,11 +1,12 @@
 import { ToolsConfiguration } from 'src/mcp/toolkit';
-import { Tool, ToolSubType } from '../../tool';
+import { ToolSubType, ToolType } from '../../tool';
+import { MondayAppsToolType } from './base-tool/monday-apps-tool';
 
-export function filterMondayAppsTools<T extends new (...args: any[]) => Tool<any, any>>(
-  tools: T[],
+export function filterMondayAppsTools(
+  tools: MondayAppsToolType[],
   mondayApiToken: string,
   config?: ToolsConfiguration,
-): T[] {
+): MondayAppsToolType[] {
   if (!config) {
     return tools;
   }

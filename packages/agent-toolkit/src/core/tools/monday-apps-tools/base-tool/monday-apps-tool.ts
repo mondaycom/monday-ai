@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import * as crypto from 'crypto';
 import * as https from 'https';
 import { ZodRawShape } from 'zod';
-import { Tool, ToolInputType, ToolOutputType, ToolType } from '../../../tool';
+import { Tool, ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../../tool';
 import { APPS_MS_TIMEOUT_IN_MS } from '../consts/routes.consts';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 
@@ -21,6 +21,7 @@ export abstract class BaseMondayAppsTool<
 {
   abstract name: string;
   type: ToolType = ToolType.MONDAY_APPS;
+  abstract subType: ToolSubType;
   abstract category: MondayAppsToolCategory;
   private mondayApiToken?: string;
 
