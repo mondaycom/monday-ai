@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToolOutputType } from '../../tool';
+import { ToolOutputType, ToolSubType } from '../../tool';
 import { ToolInputType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { ToolType } from '../../tool';
@@ -27,7 +27,8 @@ export const createTimelineItemToolSchema = {
 
 export class CreateTimelineItemTool extends BaseMondayApiTool<typeof createTimelineItemToolSchema> {
   name = 'create_timeline_item';
-  type = ToolType.MUTATION;
+  type = ToolType.API;
+  subType = ToolSubType.WRITE;
 
   getDescription(): string {
     return 'Create a new timeline item in the E&A app';

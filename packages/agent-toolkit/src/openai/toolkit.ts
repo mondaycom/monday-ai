@@ -8,18 +8,26 @@ import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { Tool } from '../core/tool';
 import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
-import { ApiToolsConfiguration, filterApiTools } from '../core/tools/platform-api-tools/utils';
+import { filterApiTools } from '../core/tools/platform-api-tools/utils';
+import { filterMondayAppsTools } from 'src/core/tools/monday-apps-tools/utils';
 
+export type ToolsConfiguration = {
+  include?: string[];
+  exclude?: string[];
+  readOnlyMode?: boolean;
+  enableDynamicApiTools?: boolean;
+  enableMondayAppsTools?: boolean;
+};
 export type MondayAgentToolkitConfig = {
   mondayApiToken: ApiClientConfig['token'];
   mondayApiVersion?: ApiClientConfig['apiVersion'];
   mondayApiRequestConfig?: ApiClientConfig['requestConfig'];
-  toolsConfiguration?: ApiToolsConfiguration;
+  toolsConfiguration?: ToolsConfiguration;
 };
 
 export class MondayAgentToolkit {
   private readonly mondayApi: ApiClient;
-  private readonly mondayApiToken?: string;
+  private readonly mondayApiToken: string;
   tools: Tool<any, any>[];
 
   constructor(config: MondayAgentToolkitConfig) {
@@ -51,8 +59,12 @@ export class MondayAgentToolkit {
       }
     }
 
-    // Initialize Monday Apps tools
-    for (const ToolClass of allMondayAppsTools) {
+    const filteredMondayAppsTools = filterMondayAppsTools(
+      allMondayAppsTools,
+      this.mondayApiToken,
+      config.toolsConfiguration,
+    );
+    for (const ToolClass of filteredMondayAppsTools) {
       try {
         const tool = new ToolClass(this.mondayApiToken);
         tools.push(tool);
