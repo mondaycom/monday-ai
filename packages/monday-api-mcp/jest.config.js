@@ -1,5 +1,6 @@
+/* eslint-env node */
 /** @type {import('jest').Config} */
-export default {
+module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
