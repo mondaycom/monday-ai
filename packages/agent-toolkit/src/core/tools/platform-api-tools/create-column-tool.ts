@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType, ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { createColumn } from '../../../monday-graphql/queries.graphql';
 import {
@@ -29,7 +29,8 @@ export type CreateColumnToolInput = typeof createColumnToolSchema | typeof creat
 
 export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
   name = 'create_column';
-  type = ToolType.MUTATION;
+  type = ToolType.API;
+  subType = ToolSubType.WRITE;
 
   getDescription(): string {
     return 'Create a new column in a monday.com board';

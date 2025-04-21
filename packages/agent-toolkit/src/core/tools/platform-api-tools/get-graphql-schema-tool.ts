@@ -1,11 +1,12 @@
-import { ToolOutputType, ToolType } from '../../tool';
+import { ToolOutputType, ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { getGraphQLSchema } from '../../../monday-graphql/queries.graphql';
 import { GetGraphQlSchemaQuery } from '../../../monday-graphql/generated/graphql';
 
 export class GetGraphQLSchemaTool extends BaseMondayApiTool<undefined> {
   name = 'get_graphql_schema';
-  type = ToolType.ALL_API;
+  type = ToolType.API;
+  subType = ToolSubType.ALL_API;
 
   getDescription(): string {
     return 'Fetch the Monday.com GraphQL schema structure including query and mutation definitions';

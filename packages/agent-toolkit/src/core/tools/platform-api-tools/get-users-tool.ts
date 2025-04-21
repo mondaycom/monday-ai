@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { getUsersByName } from '../../../monday-graphql/queries.graphql';
 import { GetUsersByNameQuery, GetUsersByNameQueryVariables } from '../../../monday-graphql/generated/graphql';
@@ -10,7 +10,8 @@ export const getUsersToolSchema = {
 
 export class GetUsersTool extends BaseMondayApiTool<typeof getUsersToolSchema> {
   name = 'get_users_by_name';
-  type = ToolType.QUERY;
+  type = ToolType.API;
+  subType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Get users, can be filtered by name or partial name';

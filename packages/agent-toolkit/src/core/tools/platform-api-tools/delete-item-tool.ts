@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { deleteItem } from '../../../monday-graphql/queries.graphql';
 import { DeleteItemMutation, DeleteItemMutationVariables } from '../../../monday-graphql/generated/graphql';
-import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../tool';
 
 export const deleteItemToolSchema = {
   itemId: z.number(),
@@ -10,7 +10,8 @@ export const deleteItemToolSchema = {
 
 export class DeleteItemTool extends BaseMondayApiTool<typeof deleteItemToolSchema, never> {
   name = 'delete_item';
-  type = ToolType.MUTATION;
+  type = ToolType.API;
+  subType = ToolSubType.WRITE;
 
   getDescription(): string {
     return 'Delete an item';

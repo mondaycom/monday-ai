@@ -1,4 +1,4 @@
-import { ToolOutputType } from '../../tool';
+import { ToolOutputType, ToolSubType } from '../../tool';
 import { ToolInputType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { ToolType } from '../../tool';
@@ -9,7 +9,8 @@ export const fetchCustomActivityToolSchema = {};
 
 export class FetchCustomActivityTool extends BaseMondayApiTool<typeof fetchCustomActivityToolSchema> {
   name = 'fetch_custom_activity';
-  type = ToolType.QUERY;
+  type = ToolType.API;
+  subType = ToolSubType.READ;
 
   getDescription(): string {
     return 'Get custom activities from the E&A app';

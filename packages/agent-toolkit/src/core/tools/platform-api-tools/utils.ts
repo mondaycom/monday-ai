@@ -1,18 +1,12 @@
 import { ApiClient } from '@mondaydotcomorg/api';
-import { ToolType } from '../../tool';
+import { ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-
-export type ApiToolsConfiguration = {
-  include?: string[];
-  exclude?: string[];
-  readOnlyMode?: boolean;
-  enableDynamicApiTools?: boolean;
-};
+import { ToolsConfiguration } from 'src/mcp/toolkit';
 
 export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTool<any>>(
   tools: T[],
   apiClient: ApiClient,
-  config?: ApiToolsConfiguration,
+  config?: ToolsConfiguration,
 ): T[] {
   if (!config) {
     return tools;
@@ -26,7 +20,7 @@ export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTo
 
   filteredTools = filteredTools.filter((tool) => {
     const toolInstance = new tool(apiClient);
-    return toolInstance.type !== ToolType.ALL_API;
+    return toolInstance.subType !== ToolSubType.ALL_API;
   });
 
   if (config.include) {
@@ -44,7 +38,7 @@ export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTo
   if (config.readOnlyMode) {
     filteredTools = filteredTools.filter((tool) => {
       const toolInstance = new tool(apiClient);
-      return toolInstance.type === ToolType.QUERY;
+      return toolInstance.subType === ToolSubType.READ;
     });
   }
 
