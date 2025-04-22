@@ -1,6 +1,6 @@
-import { allGraphqlApiTools, filterApiTools } from './platform-api-tools';
+import { allGraphqlApiTools, BaseMondayApiTool } from './platform-api-tools';
 import { allMondayAppsTools } from './monday-apps-tools';
 
 export const allTools = [...allGraphqlApiTools, ...allMondayAppsTools];
 
-export { allGraphqlApiTools, filterApiTools, allMondayAppsTools };
+export { allGraphqlApiTools, BaseMondayApiTool, allMondayAppsTools };
