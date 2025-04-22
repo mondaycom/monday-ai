@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolSubType, ToolSubType, ToolType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 import { createColumn } from '../../../monday-graphql/queries.graphql';
 import {
@@ -46,7 +46,7 @@ export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
 
   async execute(input: ToolInputType<CreateColumnToolInput>): Promise<ToolOutputType<never>> {
     const boardId = this.context?.boardId ?? (input as ToolInputType<typeof createColumnInBoardToolSchema>).boardId;
-    
+
     let columnSettings: string | undefined;
     if (input.columnSettings && input.columnType === ColumnType.Status) {
       columnSettings = JSON.stringify({
@@ -55,7 +55,7 @@ export class CreateColumnTool extends BaseMondayApiTool<CreateColumnToolInput> {
     } else if (input.columnSettings && input.columnType === ColumnType.Dropdown) {
       columnSettings = JSON.stringify({
         settings: {
-          labels: input.columnSettings.map((label: string, i: number) => ({id: i + 1, name: label})),
+          labels: input.columnSettings.map((label: string, i: number) => ({ id: i + 1, name: label })),
         },
       });
     }
