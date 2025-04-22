@@ -1097,6 +1097,99 @@ enum BoardSubscriberKind {
   subscriber
 }
 
+"""The available board view types."""
+enum BoardViewTypeEnum {
+  """Agile reports board view."""
+  AgileReportsBoardView
+
+  """Battery board view."""
+  BatteryBoardView
+
+  """Burndown board view."""
+  BurndownBoardView
+
+  """Calendar board view."""
+  CalendarBoardView
+
+  """CRM billing item view."""
+  CrmBillingItemView
+
+  """CRM communication item view."""
+  CrmCommunicationItemView
+
+  """CRM quotes and invoices item view."""
+  CrmQuotesAndInvoicesItemView
+
+  """Doc board view."""
+  DocBoardView
+
+  """Empty board view."""
+  EmptyBoardView
+
+  """Files board view."""
+  FilesBoardView
+
+  """Files gallery board view."""
+  FilesGalleryBoardView
+
+  """Form board view."""
+  FormBoardView
+
+  """Git UI board view."""
+  GitUiBoardView
+
+  """Graph/Chart board view."""
+  GraphBoardView
+
+  """Hierarchies board view."""
+  HierarchiesBoardView
+
+  """Item column values board view."""
+  ItemColumnValuesBoardView
+
+  """Item description board view."""
+  ItemDescriptionBoardView
+
+  """Items gallery board view."""
+  ItemsGalleryBoardView
+
+  """Kanban board view."""
+  KanbanBoardView
+
+  """Map board view."""
+  MapBoardView
+
+  """Pivot board view."""
+  PivotBoardView
+
+  """Resource allocation board view."""
+  ResourceAllocationBoardView
+
+  """Risks insights board view."""
+  RisksInsightsBoardView
+
+  """Roadmap board view."""
+  RoadmapBoardView
+
+  """Snapshot board view."""
+  SnapshotBoardView
+
+  """SPP board view."""
+  SppBoardView
+
+  """Table board view."""
+  TableBoardView
+
+  """Table widget board view."""
+  TableWidgetBoardView
+
+  """Timeline board view."""
+  TimelineBoardView
+
+  """Timeline Gantt board view."""
+  TimelineGanttBoardView
+}
+
 """
 A board's view.
 """
@@ -4775,6 +4868,27 @@ type Mutation {
     """
     workspace_id: ID
   ): Board
+
+  """Create a new board view."""
+  create_board_view(
+    """The board's unique identifier."""
+    board_id: ID!
+
+    """The name of the board view."""
+    name: String!
+
+    """The settings for the board view."""
+    settings: String
+
+    """The source view ID if copying from another view."""
+    source_view_id: ID
+
+    """The type of the board view."""
+    type: BoardViewTypeEnum!
+
+    """View specific data."""
+    view_specific_data: String
+  ): BoardView
 
   """
   Create a new column in board.

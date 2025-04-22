@@ -605,6 +605,70 @@ export type BoardView = {
   view_specific_data_str: Scalars['String']['output'];
 };
 
+/** The available board view types. */
+export enum BoardViewTypeEnum {
+  /** Agile reports board view. */
+  AgileReportsBoardView = 'AgileReportsBoardView',
+  /** Battery board view. */
+  BatteryBoardView = 'BatteryBoardView',
+  /** Burndown board view. */
+  BurndownBoardView = 'BurndownBoardView',
+  /** Calendar board view. */
+  CalendarBoardView = 'CalendarBoardView',
+  /** CRM billing item view. */
+  CrmBillingItemView = 'CrmBillingItemView',
+  /** CRM communication item view. */
+  CrmCommunicationItemView = 'CrmCommunicationItemView',
+  /** CRM quotes and invoices item view. */
+  CrmQuotesAndInvoicesItemView = 'CrmQuotesAndInvoicesItemView',
+  /** Doc board view. */
+  DocBoardView = 'DocBoardView',
+  /** Empty board view. */
+  EmptyBoardView = 'EmptyBoardView',
+  /** Files board view. */
+  FilesBoardView = 'FilesBoardView',
+  /** Files gallery board view. */
+  FilesGalleryBoardView = 'FilesGalleryBoardView',
+  /** Form board view. */
+  FormBoardView = 'FormBoardView',
+  /** Git UI board view. */
+  GitUiBoardView = 'GitUiBoardView',
+  /** Graph/Chart board view. */
+  GraphBoardView = 'GraphBoardView',
+  /** Hierarchies board view. */
+  HierarchiesBoardView = 'HierarchiesBoardView',
+  /** Item column values board view. */
+  ItemColumnValuesBoardView = 'ItemColumnValuesBoardView',
+  /** Item description board view. */
+  ItemDescriptionBoardView = 'ItemDescriptionBoardView',
+  /** Items gallery board view. */
+  ItemsGalleryBoardView = 'ItemsGalleryBoardView',
+  /** Kanban board view. */
+  KanbanBoardView = 'KanbanBoardView',
+  /** Map board view. */
+  MapBoardView = 'MapBoardView',
+  /** Pivot board view. */
+  PivotBoardView = 'PivotBoardView',
+  /** Resource allocation board view. */
+  ResourceAllocationBoardView = 'ResourceAllocationBoardView',
+  /** Risks insights board view. */
+  RisksInsightsBoardView = 'RisksInsightsBoardView',
+  /** Roadmap board view. */
+  RoadmapBoardView = 'RoadmapBoardView',
+  /** Snapshot board view. */
+  SnapshotBoardView = 'SnapshotBoardView',
+  /** SPP board view. */
+  SppBoardView = 'SppBoardView',
+  /** Table board view. */
+  TableBoardView = 'TableBoardView',
+  /** Table widget board view. */
+  TableWidgetBoardView = 'TableWidgetBoardView',
+  /** Timeline board view. */
+  TimelineBoardView = 'TimelineBoardView',
+  /** Timeline Gantt board view. */
+  TimelineGanttBoardView = 'TimelineGanttBoardView'
+}
+
 /** Options to order by. */
 export enum BoardsOrderBy {
   /** The rank order of the board creation time (desc). */
@@ -2161,6 +2225,8 @@ export type Mutation = {
   complexity?: Maybe<Complexity>;
   /** Create a new board. */
   create_board?: Maybe<Board>;
+  /** Create a new board view. */
+  create_board_view?: Maybe<BoardView>;
   /** Create a new column in board. */
   create_column?: Maybe<Column>;
   create_custom_activity?: Maybe<CustomActivity>;
@@ -2460,6 +2526,17 @@ export type MutationCreate_BoardArgs = {
   folder_id?: InputMaybe<Scalars['ID']['input']>;
   template_id?: InputMaybe<Scalars['ID']['input']>;
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+/** Update your monday.com data. */
+export type MutationCreate_Board_ViewArgs = {
+  board_id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  settings?: InputMaybe<Scalars['String']['input']>;
+  source_view_id?: InputMaybe<Scalars['ID']['input']>;
+  type: BoardViewTypeEnum;
+  view_specific_data?: InputMaybe<Scalars['String']['input']>;
 };
 
 
