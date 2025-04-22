@@ -1,7 +1,7 @@
 import { ApiClient } from '@mondaydotcomorg/api';
-import { ToolSubType, ToolType } from '../../tool';
-import { BaseMondayApiTool } from './base-monday-api-tool';
 import { ToolsConfiguration } from 'src/mcp/toolkit';
+import { ToolSubType } from '../../tool';
+import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTool<any>>(
   tools: T[],

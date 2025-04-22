@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../tool';
-import { BaseMondayApiTool } from './base-monday-api-tool';
-import { generateTypeDetailsQuery } from '../../../monday-graphql/queries.graphql';
 import { GetTypeDetailsQuery } from '../../../monday-graphql/generated/graphql';
+import { generateTypeDetailsQuery } from '../../../monday-graphql/queries.graphql';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const getTypeDetailsToolSchema = {
   typeName: z.string().describe('The name of the GraphQL type to get details for'),
@@ -10,7 +10,6 @@ export const getTypeDetailsToolSchema = {
 
 export class GetTypeDetailsTool extends BaseMondayApiTool<typeof getTypeDetailsToolSchema> {
   name = 'get_type_details';
-  type = ToolType.API;
   subType = ToolSubType.ALL_API;
 
   getDescription(): string {
