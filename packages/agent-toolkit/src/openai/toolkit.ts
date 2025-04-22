@@ -1,14 +1,22 @@
 import { ApiClient, ApiClientConfig } from '@mondaydotcomorg/api';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import type {
-  ChatCompletionTool,
   ChatCompletionMessageToolCall,
+  ChatCompletionTool,
   ChatCompletionToolMessageParam,
 } from 'openai/resources';
 import { z } from 'zod';
-import { Tool, allTools } from '../core';
-import { filterTools, ToolsConfiguration } from '../core/utils';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { Tool } from '../core/tool';
+import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
+import { filterApiTools, filterMondayAppsTools } from '../utils';
 
+export type ToolsConfiguration = {
+  include?: string[];
+  exclude?: string[];
+  readOnlyMode?: boolean;
+  enableDynamicApiTools?: boolean;
+  enableMondayAppsTools?: boolean;
+};
 export type MondayAgentToolkitConfig = {
   mondayApiToken: ApiClientConfig['token'];
   mondayApiVersion?: ApiClientConfig['apiVersion'];
@@ -18,6 +26,7 @@ export type MondayAgentToolkitConfig = {
 
 export class MondayAgentToolkit {
   private readonly mondayApi: ApiClient;
+  private readonly mondayApiToken: string;
   tools: Tool<any, any>[];
 
   constructor(config: MondayAgentToolkitConfig) {
@@ -26,9 +35,46 @@ export class MondayAgentToolkit {
       apiVersion: config.mondayApiVersion,
       requestConfig: config.mondayApiRequestConfig,
     });
+    this.mondayApiToken = config.mondayApiToken;
 
-    const toolsToRegister = filterTools(allTools, this.mondayApi, config.toolsConfiguration);
-    this.tools = toolsToRegister.map((tool) => new tool(this.mondayApi)) as Tool<any, any>[];
+    this.tools = this.initializeTools(config);
+  }
+
+  /**
+   * Initialize both API and CLI tools
+   */
+  private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
+    const tools: Tool<any, any>[] = [];
+
+    const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApi, config.toolsConfiguration);
+    for (const ToolClass of filteredApiTools) {
+      try {
+        const tool = new ToolClass(this.mondayApi);
+        tools.push(tool);
+      } catch (error) {
+        console.warn(
+          `Failed to initialize API tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+
+    const filteredMondayAppsTools = filterMondayAppsTools(
+      allMondayAppsTools,
+      this.mondayApiToken,
+      config.toolsConfiguration,
+    );
+    for (const ToolClass of filteredMondayAppsTools) {
+      try {
+        const tool = new ToolClass(this.mondayApiToken);
+        tools.push(tool);
+      } catch (error) {
+        console.warn(
+          `Failed to initialize Monday Apps tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+
+    return tools;
   }
 
   /**
@@ -67,18 +113,27 @@ export class MondayAgentToolkit {
       throw new Error(`Unknown tool: ${name}`);
     }
 
-    const parsedResult = z.object(tool.getInputSchema()).safeParse(args);
-    if (!parsedResult.success) {
-      // TODO: log error?
-      throw new Error(`Invalid arguments: ${parsedResult.error.message}`);
+    const inputSchema = tool.getInputSchema();
+    if (inputSchema) {
+      const parsedResult = z.object(inputSchema).safeParse(args);
+      if (!parsedResult.success) {
+        throw new Error(`Invalid arguments: ${parsedResult.error.message}`);
+      }
+
+      const result = await tool.execute(parsedResult.data);
+      return {
+        role: 'tool',
+        tool_call_id: toolCall.id,
+        content: result.content,
+      } as ChatCompletionToolMessageParam;
+    } else {
+      // Handle tools without input schema
+      const result = await tool.execute();
+      return {
+        role: 'tool',
+        tool_call_id: toolCall.id,
+        content: result.content,
+      } as ChatCompletionToolMessageParam;
     }
-
-    const result = await tool.execute(parsedResult.data);
-
-    return {
-      role: 'tool',
-      tool_call_id: toolCall.id,
-      content: result.content,
-    } as ChatCompletionToolMessageParam;
   }
 }
