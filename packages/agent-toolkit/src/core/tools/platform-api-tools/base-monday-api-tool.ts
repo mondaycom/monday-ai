@@ -14,7 +14,7 @@ export abstract class BaseMondayApiTool<
 > implements Tool<Input, Output>
 {
   abstract name: string;
-  abstract type: ToolType;
+  type = ToolType.API;
   abstract subType: ToolSubType;
 
   constructor(

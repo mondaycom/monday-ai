@@ -1,15 +1,12 @@
-import { ToolOutputType, ToolSubType } from '../../tool';
-import { ToolInputType } from '../../tool';
-import { BaseMondayApiTool } from './base-monday-api-tool';
-import { ToolType } from '../../tool';
 import { FetchCustomActivityQuery } from '../../../monday-graphql/generated/graphql';
 import { fetchCustomActivity } from '../../../monday-graphql/queries.graphql';
+import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const fetchCustomActivityToolSchema = {};
 
 export class FetchCustomActivityTool extends BaseMondayApiTool<typeof fetchCustomActivityToolSchema> {
   name = 'fetch_custom_activity';
-  type = ToolType.API;
   subType = ToolSubType.READ;
 
   getDescription(): string {

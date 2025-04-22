@@ -21,3 +21,5 @@ export const allMondayAppsTools: MondayAppsToolType[] = [
   ...appFeatureTools,
   ...codeTools,
 ];
+
+export { MondayAppsToolType };

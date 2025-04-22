@@ -8,8 +8,7 @@ import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { Tool } from '../core/tool';
 import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
-import { filterApiTools } from '../core/tools/platform-api-tools/utils';
-import { filterMondayAppsTools } from 'src/core/tools/monday-apps-tools/utils';
+import { filterApiTools, filterMondayAppsTools } from '../utils';
 
 export type ToolsConfiguration = {
   include?: string[];
