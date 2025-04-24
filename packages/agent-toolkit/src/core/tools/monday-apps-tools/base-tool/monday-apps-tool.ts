@@ -2,9 +2,9 @@ import axios, { AxiosRequestConfig } from 'axios';
 import * as crypto from 'crypto';
 import * as https from 'https';
 import { ZodRawShape } from 'zod';
-import { Tool, ToolInputType, ToolOutputType, ToolSubType, ToolType } from '../../../tool';
-import { APPS_MS_TIMEOUT_IN_MS } from '../consts/routes.consts';
+import { Tool, ToolInputType, ToolOutputType, ToolType } from '../../../tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
+import { APPS_MS_TIMEOUT_IN_MS } from '../consts/routes.consts';
 
 export interface MondayApiResponse {
   statusCode: number;
@@ -20,8 +20,7 @@ export abstract class BaseMondayAppsTool<
 > implements Tool<Input, Output>
 {
   abstract name: string;
-  type: ToolType = ToolType.MONDAY_APPS;
-  abstract subType: ToolSubType;
+  abstract type: ToolType;
   abstract category: MondayAppsToolCategory;
   private mondayApiToken?: string;
 

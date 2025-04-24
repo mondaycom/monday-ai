@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType, ToolSubType } from 'src/core/tool';
+import { ToolInputType, ToolOutputType, ToolType } from 'src/core/tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -10,7 +10,7 @@ export class ExportStorageDataTool extends BaseMondayAppsTool<
 > {
   name = 'monday_apps_export_storage_data';
   category = MondayAppsToolCategory.STORAGE;
-  subType: ToolSubType = ToolSubType.READ;
+  type: ToolType = ToolType.READ;
 
   getDescription(): string {
     return 'Export storage data from a Monday.com app';

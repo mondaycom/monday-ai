@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,7 +7,7 @@ import { EnvVarResponse, deleteEnvVarSchema } from './schemas/code-schemas';
 export class DeleteEnvironmentVariableTool extends BaseMondayAppsTool<typeof deleteEnvVarSchema.shape, EnvVarResponse> {
   name = 'monday_apps_delete_environment_variable';
   category = MondayAppsToolCategory.MONDAY_CODE;
-  subType: ToolSubType = ToolSubType.WRITE;
+  type: ToolType = ToolType.WRITE;
 
   getDescription(): string {
     return 'Delete an environment variable for an app';

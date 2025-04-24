@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,7 +7,7 @@ import { AppVersionApiDataResponse, getAppVersionSchema } from './schemas/app-ve
 export class GetAppVersionTool extends BaseMondayAppsTool<typeof getAppVersionSchema.shape, AppVersionApiDataResponse> {
   name = 'monday_apps_get_app_version';
   category = MondayAppsToolCategory.APP_VERSION;
-  subType: ToolSubType = ToolSubType.READ;
+  type: ToolType = ToolType.READ;
 
   getDescription(): string {
     return 'Retrieve the app version data';

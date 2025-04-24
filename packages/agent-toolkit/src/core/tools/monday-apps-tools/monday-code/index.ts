@@ -11,3 +11,9 @@ export const codeTools = [
   DeleteEnvironmentVariableTool,
   ListEnvironmentVariableKeysTool,
 ];
+
+export * from './get-deployment-status';
+export * from './get-tunnel-token';
+export * from './set-environment-variable';
+export * from './delete-environment-variable';
+export * from './list-environment-variable-keys';

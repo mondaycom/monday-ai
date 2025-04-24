@@ -1,4 +1,4 @@
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../../tool';
 import { BaseMondayAppsTool } from '../base-tool/monday-apps-tool';
 import { MondayAppsToolCategory } from '../consts/apps.consts';
 import { API_ENDPOINTS, HttpMethod } from '../consts/routes.consts';
@@ -7,7 +7,7 @@ import { TunnelTokenResponse, getTunnelTokenSchema } from './schemas/code-schema
 export class GetTunnelTokenTool extends BaseMondayAppsTool<typeof getTunnelTokenSchema.shape, TunnelTokenResponse> {
   name = 'monday_apps_get_tunnel_token';
   category = MondayAppsToolCategory.MONDAY_CODE;
-  subType: ToolSubType = ToolSubType.READ;
+  type: ToolType = ToolType.READ;
 
   getDescription(): string {
     return 'Get a tunnel token for exposing code running on the local machine';
