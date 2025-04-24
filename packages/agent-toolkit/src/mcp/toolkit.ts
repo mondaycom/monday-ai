@@ -1,25 +1,11 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { CallToolResult } from '@modelcontextprotocol/sdk/types';
-import { ApiClient, ApiClientConfig } from '@mondaydotcomorg/api';
+import { ApiClient } from '@mondaydotcomorg/api';
+import { createToolInstance } from 'src/utils';
+import { getFilteredTools } from 'src/utils/tools/tools-filtering.utils';
 import { z } from 'zod';
 import { Tool } from '../core/tool';
-import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
-import { filterApiTools, filterMondayAppsTools } from '../utils';
-
-export type ToolsConfiguration = {
-  include?: string[];
-  exclude?: string[];
-  readOnlyMode?: boolean;
-  enableDynamicApiTools?: boolean;
-  enableMondayAppsTools?: boolean;
-};
-
-export type MondayAgentToolkitConfig = {
-  mondayApiToken: ApiClientConfig['token'];
-  mondayApiVersion?: ApiClientConfig['apiVersion'];
-  mondayApiRequestConfig?: ApiClientConfig['requestConfig'];
-  toolsConfiguration?: ToolsConfiguration;
-};
+import { MondayAgentToolkitConfig } from 'src/types';
 
 /**
  * Monday Agent Toolkit providing an MCP server with Monday.com tools
@@ -82,35 +68,16 @@ export class MondayAgentToolkit extends McpServer {
    */
   private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
     const tools: Tool<any, any>[] = [];
+    const instanceOptions = {
+      apiClient: this.mondayApiClient,
+      apiToken: this.mondayApiToken,
+    };
 
-    // Initialize API tools
-    const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApiClient, config.toolsConfiguration);
-    for (const ToolClass of filteredApiTools) {
-      try {
-        const tool = new ToolClass(this.mondayApiClient);
-        tools.push(tool);
-      } catch (error) {
-        console.warn(
-          `Failed to initialize API tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    }
+    const filteredTools = getFilteredTools(instanceOptions, config.toolsConfiguration);
 
-    // Initialize Monday Apps tools
-    const filteredMondayAppsTools = filterMondayAppsTools(
-      allMondayAppsTools,
-      this.mondayApiToken,
-      config.toolsConfiguration,
-    );
-    for (const ToolClass of filteredMondayAppsTools) {
-      try {
-        const tool = new ToolClass(this.mondayApiToken);
-        tools.push(tool);
-      } catch (error) {
-        console.warn(
-          `Failed to initialize Monday Apps tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
+    for (const tool of filteredTools) {
+      const toolInstance = createToolInstance(tool, instanceOptions);
+      tools.push(toolInstance);
     }
 
     return tools;

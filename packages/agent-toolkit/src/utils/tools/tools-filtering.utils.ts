@@ -1,82 +1,37 @@
 import { ApiClient } from '@mondaydotcomorg/api';
-import { Tool, ToolSubType } from 'src/core';
-import { BaseMondayApiTool } from 'src/core/';
-import { ToolsConfiguration } from 'src/mcp';
+import { allGraphqlApiTools, allMondayAppsTools, Tool, ToolType } from 'src/core';
+import { ToolsConfiguration } from 'src/types';
+import { createToolInstance } from './initializing.utils';
 
-export function filterApiTools<T extends new (api: ApiClient) => BaseMondayApiTool<any>>(
-  tools: T[],
-  apiClient: ApiClient,
+export const getFilteredTools = (
+  instanceOptions: { apiClient: ApiClient; apiToken: string },
   config?: ToolsConfiguration,
-): T[] {
+) => {
+  const allTools: Array<new (...args: any[]) => Tool<any, any>> = [...allGraphqlApiTools];
   if (!config) {
-    return tools;
+    return allTools;
   }
 
-  // If dynamic API tools are enabled and read-only mode is not enabled, return all tools
-  let filteredTools = tools;
-  if (config.enableDynamicApiTools && !config.readOnlyMode) {
-    return filteredTools;
+  if (config.enableMondayAppsTools) {
+    allTools.push(...allMondayAppsTools);
   }
 
-  filteredTools = filteredTools.filter((tool) => {
-    const toolInstance = new tool(apiClient);
-    return toolInstance.subType !== ToolSubType.ALL_API;
+  return allTools.filter((tool) => {
+    const toolInstance = createToolInstance(tool, instanceOptions);
+    let shouldFilter = false;
+    if (!config.enableDynamicApiTools) {
+      shouldFilter = shouldFilter || toolInstance.subType === ToolType.ALL_API;
+    }
+    if (config.readOnlyMode) {
+      shouldFilter =
+        shouldFilter || toolInstance.subType !== ToolType.READ || toolInstance.subType === ToolType.ALL_API;
+    }
+    if (config.include) {
+      shouldFilter = shouldFilter || !config.include?.includes(toolInstance.name);
+    }
+    if (config.exclude) {
+      shouldFilter = shouldFilter || config.exclude?.includes(toolInstance.name);
+    }
+    return !shouldFilter;
   });
-
-  if (config.include) {
-    filteredTools = tools.filter((tool) => {
-      const toolInstance = new tool(apiClient);
-      return config.include?.includes(toolInstance.name);
-    });
-  } else if (config.exclude) {
-    filteredTools = tools.filter((tool) => {
-      const toolInstance = new tool(apiClient);
-      return !config.exclude?.includes(toolInstance.name);
-    });
-  }
-
-  if (config.readOnlyMode) {
-    filteredTools = filteredTools.filter((tool) => {
-      const toolInstance = new tool(apiClient);
-      return toolInstance.subType === ToolSubType.READ;
-    });
-  }
-
-  return filteredTools;
-}
-
-export function filterMondayAppsTools<T extends new (...args: any[]) => Tool<any, any>>(
-  tools: T[],
-  mondayApiToken: string,
-  config?: ToolsConfiguration,
-): T[] {
-  if (!config) {
-    return tools;
-  }
-
-  if (!config.enableMondayAppsTools) {
-    return [];
-  }
-  let filteredTools = tools;
-
-  if (config.include) {
-    filteredTools = tools.filter((tool) => {
-      const toolInstance = new tool(mondayApiToken);
-      return config.include?.includes(toolInstance.name);
-    });
-  } else if (config.exclude) {
-    filteredTools = tools.filter((tool) => {
-      const toolInstance = new tool(mondayApiToken);
-      return !config.exclude?.includes(toolInstance.name);
-    });
-  }
-
-  if (config.readOnlyMode) {
-    filteredTools = filteredTools.filter((tool) => {
-      const toolInstance = new tool(mondayApiToken);
-      return toolInstance.subType === ToolSubType.READ;
-    });
-  }
-
-  return filteredTools;
-}
+};
