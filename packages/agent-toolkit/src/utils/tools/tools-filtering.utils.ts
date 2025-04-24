@@ -20,16 +20,14 @@ export const getFilteredTools = (
     const toolInstance = createToolInstance(tool, instanceOptions);
     let shouldFilter = false;
     if (!config.enableDynamicApiTools) {
-      shouldFilter = shouldFilter || toolInstance.subType === ToolType.ALL_API;
+      shouldFilter = shouldFilter || toolInstance.type === ToolType.ALL_API;
     }
     if (config.readOnlyMode) {
-      shouldFilter =
-        shouldFilter || toolInstance.subType !== ToolType.READ || toolInstance.subType === ToolType.ALL_API;
+      shouldFilter = shouldFilter || toolInstance.type !== ToolType.READ;
     }
     if (config.include) {
       shouldFilter = shouldFilter || !config.include?.includes(toolInstance.name);
-    }
-    if (config.exclude) {
+    } else if (config.exclude) {
       shouldFilter = shouldFilter || config.exclude?.includes(toolInstance.name);
     }
     return !shouldFilter;
