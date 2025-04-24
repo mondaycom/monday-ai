@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CreateUpdateMutation, CreateUpdateMutationVariables } from '../../../monday-graphql/generated/graphql';
 import { createUpdate } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const createUpdateToolSchema = {
@@ -11,7 +11,7 @@ export const createUpdateToolSchema = {
 
 export class CreateUpdateTool extends BaseMondayApiTool<typeof createUpdateToolSchema> {
   name = 'create_update';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Create a new update in a monday.com board';

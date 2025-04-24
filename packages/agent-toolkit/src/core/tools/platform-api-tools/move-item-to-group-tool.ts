@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { MoveItemToGroupMutation, MoveItemToGroupMutationVariables } from '../../../monday-graphql/generated/graphql';
 import { moveItemToGroup } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const moveItemToGroupToolSchema = {
@@ -11,7 +11,7 @@ export const moveItemToGroupToolSchema = {
 
 export class MoveItemToGroupTool extends BaseMondayApiTool<typeof moveItemToGroupToolSchema> {
   name = 'move_item_to_group';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Move an item to a group in a monday.com board';

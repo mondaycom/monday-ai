@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { DeleteColumnMutation, DeleteColumnMutationVariables } from '../../../monday-graphql/generated/graphql';
 import { deleteColumn } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const deleteColumnToolSchema = {
@@ -17,7 +17,7 @@ export type DeleteColumnToolInput = typeof deleteColumnToolSchema | typeof delet
 
 export class DeleteColumnTool extends BaseMondayApiTool<DeleteColumnToolInput> {
   name = 'delete_column';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Delete a column from a monday.com board';

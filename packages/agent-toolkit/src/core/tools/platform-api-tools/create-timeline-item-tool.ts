@@ -4,7 +4,7 @@ import {
   CreateTimelineItemMutationVariables,
 } from '../../../monday-graphql/generated/graphql';
 import { createTimelineItem } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const createTimelineItemToolSchema = {
@@ -25,7 +25,7 @@ export const createTimelineItemToolSchema = {
 
 export class CreateTimelineItemTool extends BaseMondayApiTool<typeof createTimelineItemToolSchema> {
   name = 'create_timeline_item';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Create a new timeline item in the E&A app';

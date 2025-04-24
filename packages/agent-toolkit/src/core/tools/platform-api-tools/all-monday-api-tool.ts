@@ -1,7 +1,7 @@
 import { ApiClient } from '@mondaydotcomorg/api';
 import { buildClientSchema, GraphQLSchema, parse, validate } from 'graphql';
 import { z } from 'zod';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool, MondayApiToolContext } from './base-monday-api-tool';
 
 let cachedSchema: GraphQLSchema | null = null;
@@ -47,7 +47,7 @@ interface GraphQLResponse {
 
 export class AllMondayApiTool extends BaseMondayApiTool<typeof allMondayApiToolSchema> {
   name = 'all_monday_api';
-  subType = ToolSubType.ALL_API;
+  type = ToolType.ALL_API;
 
   constructor(mondayApi: ApiClient, context?: MondayApiToolContext) {
     super(mondayApi, context);

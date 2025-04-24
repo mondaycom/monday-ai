@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GetBoardSchemaQuery, GetBoardSchemaQueryVariables } from '../../../monday-graphql/generated/graphql';
 import { getBoardSchema } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const getBoardSchemaToolSchema = {
@@ -10,7 +10,7 @@ export const getBoardSchemaToolSchema = {
 
 export class GetBoardSchemaTool extends BaseMondayApiTool<typeof getBoardSchemaToolSchema | undefined> {
   name = 'get_board_schema';
-  subType = ToolSubType.READ;
+  type = ToolType.READ;
 
   getDescription(): string {
     return 'Get board schema (columns and groups) by board id';
