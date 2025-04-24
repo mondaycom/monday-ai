@@ -6,7 +6,7 @@ import {
   CustomActivityIcon,
 } from '../../../monday-graphql/generated/graphql';
 import { createCustomActivity } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const createCustomActivityToolSchema = {
@@ -17,7 +17,7 @@ export const createCustomActivityToolSchema = {
 
 export class CreateCustomActivityTool extends BaseMondayApiTool<typeof createCustomActivityToolSchema> {
   name = 'create_custom_activity';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Create a new custom activity in the E&A app';

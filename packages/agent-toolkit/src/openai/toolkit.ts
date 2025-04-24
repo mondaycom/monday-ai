@@ -1,28 +1,15 @@
-import { ApiClient, ApiClientConfig } from '@mondaydotcomorg/api';
+import { ApiClient } from '@mondaydotcomorg/api';
 import type {
   ChatCompletionMessageToolCall,
   ChatCompletionTool,
   ChatCompletionToolMessageParam,
 } from 'openai/resources';
+import { getFilteredTools } from 'src/utils/tools/tools-filtering.utils';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { Tool } from '../core/tool';
-import { allGraphqlApiTools, allMondayAppsTools } from '../core/tools';
-import { filterApiTools, filterMondayAppsTools } from '../utils';
-
-export type ToolsConfiguration = {
-  include?: string[];
-  exclude?: string[];
-  readOnlyMode?: boolean;
-  enableDynamicApiTools?: boolean;
-  enableMondayAppsTools?: boolean;
-};
-export type MondayAgentToolkitConfig = {
-  mondayApiToken: ApiClientConfig['token'];
-  mondayApiVersion?: ApiClientConfig['apiVersion'];
-  mondayApiRequestConfig?: ApiClientConfig['requestConfig'];
-  toolsConfiguration?: ToolsConfiguration;
-};
+import { createToolInstance } from '../utils';
+import { MondayAgentToolkitConfig } from 'src/types';
 
 export class MondayAgentToolkit {
   private readonly mondayApi: ApiClient;
@@ -45,33 +32,16 @@ export class MondayAgentToolkit {
    */
   private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
     const tools: Tool<any, any>[] = [];
+    const instanceOptions = {
+      apiClient: this.mondayApi,
+      apiToken: this.mondayApiToken,
+    };
 
-    const filteredApiTools = filterApiTools(allGraphqlApiTools, this.mondayApi, config.toolsConfiguration);
-    for (const ToolClass of filteredApiTools) {
-      try {
-        const tool = new ToolClass(this.mondayApi);
-        tools.push(tool);
-      } catch (error) {
-        console.warn(
-          `Failed to initialize API tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    }
+    const filteredTools = getFilteredTools(instanceOptions, config.toolsConfiguration);
 
-    const filteredMondayAppsTools = filterMondayAppsTools(
-      allMondayAppsTools,
-      this.mondayApiToken,
-      config.toolsConfiguration,
-    );
-    for (const ToolClass of filteredMondayAppsTools) {
-      try {
-        const tool = new ToolClass(this.mondayApiToken);
-        tools.push(tool);
-      } catch (error) {
-        console.warn(
-          `Failed to initialize Monday Apps tool ${ToolClass.name}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
+    for (const tool of filteredTools) {
+      const toolInstance = createToolInstance(tool, instanceOptions);
+      tools.push(toolInstance);
     }
 
     return tools;

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GetTypeDetailsQuery } from '../../../monday-graphql/generated/graphql';
 import { generateTypeDetailsQuery } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const getTypeDetailsToolSchema = {
@@ -10,7 +10,7 @@ export const getTypeDetailsToolSchema = {
 
 export class GetTypeDetailsTool extends BaseMondayApiTool<typeof getTypeDetailsToolSchema> {
   name = 'get_type_details';
-  subType = ToolSubType.ALL_API;
+  type = ToolType.ALL_API;
 
   getDescription(): string {
     return 'Get detailed information about a specific GraphQL type from the Monday.com API schema';

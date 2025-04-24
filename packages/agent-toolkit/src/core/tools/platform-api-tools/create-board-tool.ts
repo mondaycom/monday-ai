@@ -5,7 +5,7 @@ import {
   CreateBoardMutationVariables,
 } from '../../../monday-graphql/generated/graphql';
 import { createBoard } from '../../../monday-graphql/queries.graphql';
-import { ToolInputType, ToolOutputType, ToolSubType } from '../../tool';
+import { ToolInputType, ToolOutputType, ToolType } from '../../tool';
 import { BaseMondayApiTool } from './base-monday-api-tool';
 
 export const createBoardToolSchema = {
@@ -17,7 +17,7 @@ export const createBoardToolSchema = {
 
 export class CreateBoardTool extends BaseMondayApiTool<typeof createBoardToolSchema, never> {
   name = 'create_board';
-  subType = ToolSubType.WRITE;
+  type = ToolType.WRITE;
 
   getDescription(): string {
     return 'Create a monday.com board';

@@ -11,10 +11,6 @@ export type ToolOutputType<T extends Record<string, unknown>> = {
 };
 
 export enum ToolType {
-  API = 'api',
-  MONDAY_APPS = 'monday_apps',
-}
-export enum ToolSubType {
   READ = 'read',
   WRITE = 'write',
   ALL_API = 'all_api',
@@ -24,7 +20,6 @@ export interface Tool<Input extends ZodRawShape | undefined, Output extends Reco
   extends Executable<ToolInputType<Input>, ToolOutputType<Output>> {
   name: string;
   type: ToolType;
-  subType: ToolSubType;
 
   getDescription(): string;
   getInputSchema(): Input;
