@@ -8,9 +8,6 @@ export const createBoardViewToolSchema = {
   boardId: z.string().describe('The ID of the board to create the view in'),
   name: z.string().describe('The name of the board view'),
   type: z.nativeEnum(BoardViewTypeEnum).describe('The type of board view to create'),
-  settings: z.string().optional().describe('The settings for the board view in string format'),
-  sourceViewId: z.string().optional().describe('The ID of the view to copy from, if any'),
-  viewSpecificData: z.string().optional().describe('View specific data in string format'),
 };
 
 export class CreateBoardViewTool extends BaseMondayApiTool<typeof createBoardViewToolSchema> {
@@ -30,9 +27,6 @@ export class CreateBoardViewTool extends BaseMondayApiTool<typeof createBoardVie
       boardId: input.boardId,
       name: input.name,
       type: input.type,
-      settings: input.settings,
-      sourceViewId: input.sourceViewId,
-      viewSpecificData: input.viewSpecificData,
     };
 
     const res = await this.mondayApi.request(createBoardView, variables);
