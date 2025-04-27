@@ -396,18 +396,12 @@ export const createBoardView = gql`
   mutation createBoardView(
     $boardId: ID!
     $name: String!
-    $type: BoardViewTypeEnum!
-    $settings: String
-    $sourceViewId: ID
-    $viewSpecificData: String
+    $type: BoardViewTypeValues!
   ) {
     create_board_view(
       board_id: $boardId
       name: $name
       type: $type
-      settings: $settings
-      source_view_id: $sourceViewId
-      view_specific_data: $viewSpecificData
     ) {
       id
       name

@@ -606,67 +606,17 @@ export type BoardView = {
 };
 
 /** The available board view types. */
-export enum BoardViewTypeEnum {
-  /** Agile reports board view. */
-  AgileReportsBoardView = 'AgileReportsBoardView',
-  /** Battery board view. */
-  BatteryBoardView = 'BatteryBoardView',
-  /** Burndown board view. */
-  BurndownBoardView = 'BurndownBoardView',
+export enum BoardViewTypeValues {
   /** Calendar board view. */
   CalendarBoardView = 'CalendarBoardView',
-  /** CRM billing item view. */
-  CrmBillingItemView = 'CrmBillingItemView',
-  /** CRM communication item view. */
-  CrmCommunicationItemView = 'CrmCommunicationItemView',
-  /** CRM quotes and invoices item view. */
-  CrmQuotesAndInvoicesItemView = 'CrmQuotesAndInvoicesItemView',
   /** Doc board view. */
   DocBoardView = 'DocBoardView',
   /** Empty board view. */
   EmptyBoardView = 'EmptyBoardView',
-  /** Files board view. */
-  FilesBoardView = 'FilesBoardView',
-  /** Files gallery board view. */
-  FilesGalleryBoardView = 'FilesGalleryBoardView',
   /** Form board view. */
   FormBoardView = 'FormBoardView',
-  /** Git UI board view. */
-  GitUiBoardView = 'GitUiBoardView',
-  /** Graph/Chart board view. */
-  GraphBoardView = 'GraphBoardView',
-  /** Hierarchies board view. */
-  HierarchiesBoardView = 'HierarchiesBoardView',
-  /** Item column values board view. */
-  ItemColumnValuesBoardView = 'ItemColumnValuesBoardView',
-  /** Item description board view. */
-  ItemDescriptionBoardView = 'ItemDescriptionBoardView',
-  /** Items gallery board view. */
-  ItemsGalleryBoardView = 'ItemsGalleryBoardView',
-  /** Kanban board view. */
-  KanbanBoardView = 'KanbanBoardView',
-  /** Map board view. */
-  MapBoardView = 'MapBoardView',
-  /** Pivot board view. */
-  PivotBoardView = 'PivotBoardView',
-  /** Resource allocation board view. */
-  ResourceAllocationBoardView = 'ResourceAllocationBoardView',
-  /** Risks insights board view. */
-  RisksInsightsBoardView = 'RisksInsightsBoardView',
-  /** Roadmap board view. */
-  RoadmapBoardView = 'RoadmapBoardView',
-  /** Snapshot board view. */
-  SnapshotBoardView = 'SnapshotBoardView',
-  /** SPP board view. */
-  SppBoardView = 'SppBoardView',
   /** Table board view. */
-  TableBoardView = 'TableBoardView',
-  /** Table widget board view. */
-  TableWidgetBoardView = 'TableWidgetBoardView',
-  /** Timeline board view. */
-  TimelineBoardView = 'TimelineBoardView',
-  /** Timeline Gantt board view. */
-  TimelineGanttBoardView = 'TimelineGanttBoardView'
+  TableBoardView = 'TableBoardView'
 }
 
 /** Options to order by. */
@@ -2533,10 +2483,7 @@ export type MutationCreate_BoardArgs = {
 export type MutationCreate_Board_ViewArgs = {
   board_id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
-  settings?: InputMaybe<Scalars['String']['input']>;
-  source_view_id?: InputMaybe<Scalars['ID']['input']>;
-  type: BoardViewTypeEnum;
-  view_specific_data?: InputMaybe<Scalars['String']['input']>;
+  type: BoardViewTypeValues;
 };
 
 
@@ -4843,6 +4790,15 @@ export type DeleteColumnMutationVariables = Exact<{
 
 export type DeleteColumnMutation = { __typename?: 'Mutation', delete_column?: { __typename?: 'Column', id: string } | null };
 
+export type CreateWorkspaceMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  kind: WorkspaceKind;
+  description?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateWorkspaceMutation = { __typename?: 'Mutation', create_workspace?: { __typename?: 'Workspace', id?: string | null } | null };
+
 export type GetGraphQlSchemaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4862,7 +4818,7 @@ export type TypeRefFragment = { __typename?: '__Type', kind: __TypeKind, name?: 
 export type GetTypeDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTypeDetailsQuery = { __typename?: 'Query', __type?: { __typename?: '__Type', name?: string | null, description?: string | null, kind: __TypeKind, fields?: Array<{ __typename?: '__Field', name: string, description?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } | null }, args: Array<{ __typename?: '__InputValue', name: string, description?: string | null, defaultValue?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } }> }> | null, inputFields?: Array<{ __typename?: '__InputValue', name: string, description?: string | null, defaultValue?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } | null } | null } }> | null, interfaces?: Array<{ __typename?: '__Type', name?: string | null }> | null, enumValues?: Array<{ __typename?: '__EnumValue', name: string, description?: string | null }> | null, possibleTypes?: Array<{ __typename?: '__Type', name?: string | null }> | null } | null };
+export type GetTypeDetailsQuery = { __typename?: 'Query', __type?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, description?: string | null, fields?: Array<{ __typename?: '__Field', name: string, description?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } }> | null, enumValues?: Array<{ __typename?: '__EnumValue', name: string, description?: string | null }> | null, inputFields?: Array<{ __typename?: '__InputValue', name: string, description?: string | null, type: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind, ofType?: { __typename?: '__Type', name?: string | null, kind: __TypeKind } | null } | null } }> | null } | null };
 
 export type CreateCustomActivityMutationVariables = Exact<{
   color: CustomActivityColor;
@@ -4893,3 +4849,12 @@ export type FetchCustomActivityQueryVariables = Exact<{ [key: string]: never; }>
 
 
 export type FetchCustomActivityQuery = { __typename?: 'Query', custom_activity?: Array<{ __typename?: 'CustomActivity', color?: CustomActivityColor | null, icon_id?: CustomActivityIcon | null, id?: string | null, name?: string | null, type?: string | null }> | null };
+
+export type CreateBoardViewMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  type: BoardViewTypeValues;
+}>;
+
+
+export type CreateBoardViewMutation = { __typename?: 'Mutation', create_board_view?: { __typename?: 'BoardView', id: string, name: string, type: string } | null };

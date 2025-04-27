@@ -1,13 +1,13 @@
 import { z } from 'zod';
 import { BaseMondayApiTool } from './base-monday-api-tool';
-import { BoardViewTypeEnum } from '../../monday-graphql/generated/graphql';
+import { BoardViewTypeValues } from '../../monday-graphql/generated/graphql';
 import { ToolInputType, ToolOutputType, ToolType } from '../tool';
 import { createBoardView } from '../../monday-graphql/queries.graphql';
 
 export const createBoardViewToolSchema = {
   boardId: z.string().describe('The ID of the board to create the view in'),
   name: z.string().describe('The name of the board view'),
-  type: z.nativeEnum(BoardViewTypeEnum).describe('The type of board view to create'),
+  type: z.nativeEnum(BoardViewTypeValues).describe('The type of board view to create'),
 };
 
 export class CreateBoardViewTool extends BaseMondayApiTool<typeof createBoardViewToolSchema> {
