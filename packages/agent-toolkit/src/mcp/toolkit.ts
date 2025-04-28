@@ -20,9 +20,9 @@ export class MondayAgentToolkit extends McpServer {
       name: 'monday.com',
       version: '1.0.0',
     });
-    process.env.MONDAY_API_ENDPOINT = 'http://api.llama.fan/v2';
     this.mondayApiClient = new ApiClient({
       token: config.mondayApiToken,
+      apiVersion: config.mondayApiVersion,
       requestConfig: {
         ...config.mondayApiRequestConfig,
         headers: {
