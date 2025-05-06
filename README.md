@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/TypeScript-Powered-blue" alt="TypeScript">
 </p>
 
-**Build powerful AI agents that interact with monday.com — Transform how you work with your boards, items, and data.**
+**Unlock the full potential of AI agents by integrating with monday.com MCP — revolutionize the way you work.**
 
 </div>
 
