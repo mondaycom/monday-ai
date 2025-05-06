@@ -1,13 +1,10 @@
 <div align="center">
 
-# 🚀 Monday.com AI Tools
-
-<img src="https://raw.githubusercontent.com/monday-ai/monday-ai-artwork/main/logos/monday-ai-logo.png" alt="Monday.com AI" width="200"/>
-
+# 🚀 monday.com MCP
 <p>
   <a href="https://npmjs.com/package/@mondaydotcomorg/monday-api-mcp"><img src="https://img.shields.io/npm/v/@mondaydotcomorg/monday-api-mcp.svg?style=flat" alt="npm version"></a>
-  <a href="https://github.com/monday-ai-opensource/monday-ai-opensource/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href="https://github.com/monday-ai-opensource/monday-ai-opensource"><img src="https://img.shields.io/github/stars/monday-ai-opensource/monday-ai-opensource.svg?style=social" alt="GitHub Stars"></a>
+  <a href="https://github.com/mondaycom/mcp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/mondaycom/mcp"><img src="https://img.shields.io/github/stars/mondaycom/mcp.svg?style=social" alt="GitHub Stars"></a>
   <img src="https://img.shields.io/badge/Node.js-v20+-green.svg" alt="Node.js Version">
   <img src="https://img.shields.io/badge/MCP-Compatible-blueviolet" alt="MCP Compatible">
   <img src="https://img.shields.io/badge/Claude-Ready-orange" alt="Claude Ready">
@@ -15,7 +12,7 @@
   <img src="https://img.shields.io/badge/TypeScript-Powered-blue" alt="TypeScript">
 </p>
 
-**Build powerful AI agents that interact with Monday.com — Transform how you work with your boards, items, and data.**
+**Build powerful AI agents that interact with monday.com — Transform how you work with your boards, items, and data.**
 
 </div>
 
@@ -25,9 +22,9 @@ This repository, maintained by the monday.com AI team, provides a comprehensive 
 
 https://github.com/user-attachments/assets/ed8d24e1-256b-4f6b-9d84-38e54a8703fd
 
-## 🔑 What is Monday.com?
+## 🔑 What is monday.com?
 
-[Monday.com](https://monday.com) is a work operating system that powers teams to run processes, projects, and everyday work. Teams use Monday.com to plan, track, and manage their work in one centralized platform. It provides a visual, intuitive interface where teams can:
+[monday.com](https://monday.com) is a work operating system that powers teams to run processes, projects, and everyday work. Teams use monday.com to plan, track, and manage their work in one centralized platform. It provides a visual, intuitive interface where teams can:
 
 - Create and manage projects with customizable boards
 - Track tasks through different stages with status columns
@@ -37,26 +34,26 @@ https://github.com/user-attachments/assets/ed8d24e1-256b-4f6b-9d84-38e54a8703fd
 
 ## 📦 What's Inside
 
-### 💻 Monday API MCP Server
-The `@mondaydotcomorg/monday-api-mcp` package provides a plug-and-play server implementation for the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It allows AI agents to interact with the Monday.com API without needing to build complex integrations.
+### 💻 monday API MCP Server
+The `@mondaydotcomorg/monday-api-mcp` package provides a plug-and-play server implementation for the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It allows AI agents to interact with the monday.com API without needing to build complex integrations.
 
 ### 🤖 Agent Toolkit
 The `@mondaydotcomorg/agent-toolkit` package provides a powerful set of tools and utilities for building AI agents that interact with the monday.com API, supporting both OpenAI and Model Context Protocol (MCP) implementations.
 
 ## 🏁 Complete Installation Guide
 
-### Step 1: Create a Monday.com Account
+### Step 1: Create a monday.com Account
 
-If you don't already have a Monday.com account:
+If you don't already have a monday.com account:
 
-1. Go to [Monday.com](https://monday.com) and sign up for an account
+1. Go to [monday.com](https://monday.com) and sign up for an account
 2. Create your first workspace and board to get started
 
 ### Step 2: Generate an API Token
 
-To interact with Monday.com's API, you'll need an API token:
+To interact with monday.com's API, you'll need an API token:
 
-1. Log in to your Monday.com account
+1. Log in to your monday.com account
 2. Click on your avatar in the bottom-left corner
 3. Select "Developers"
 4. Click "My access tokens" on the left menu
@@ -111,7 +108,7 @@ Add to your settings:
    - "What items do I have in board 123?"
    - "Can you create a board to manage my project?"
 
-2. Your assistant should now be able to interact with your Monday.com account!
+2. Your assistant should now be able to interact with your monday.com account!
 
 ## 🧰 Available Tools
 
@@ -133,22 +130,22 @@ Our MCP server provides a rich set of tools that give AI assistants the ability 
 
 ## 🔮 Dynamic API Tools (Beta)
 
-Our Dynamic API Tools feature represents a significant advancement in how AI agents can interact with Monday.com. While our standard tools cover common operations, Dynamic API Tools unlock the **full potential** of the Monday.com GraphQL API.
+Our Dynamic API Tools feature represents a significant advancement in how AI agents can interact with monday.com. While our standard tools cover common operations, Dynamic API Tools unlock the **full potential** of the monday.com GraphQL API.
 
 ### What are Dynamic API Tools?
 
-Dynamic API Tools provide AI agents with complete, adaptable access to Monday.com's entire API surface. This means your AI assistant can:
+Dynamic API Tools provide AI agents with complete, adaptable access to monday.com's entire API surface. This means your AI assistant can:
 
 1. **Access any API endpoint** - Not just the predefined operations we've built
 2. **Generate custom GraphQL queries** - Create exactly the query needed for any situation
-3. **Dynamically explore Monday.com's schema** - Understand all available data types and their relationships
+3. **Dynamically explore monday.com's schema** - Understand all available data types and their relationships
 
 ### Key Dynamic API Tools
 
 | Tool | Description |
 |------|-------------|
 | all_monday_api | Generate and execute any GraphQL query or mutation dynamically |
-| get_graphql_schema | Fetch Monday.com's GraphQL schema to understand available operations |
+| get_graphql_schema | Fetch monday.com's GraphQL schema to understand available operations |
 | get_type_details | Retrieve detailed information about specific GraphQL types |
 
 ### Unlocked Possibilities
@@ -157,8 +154,8 @@ With Dynamic API Tools, your AI assistants can:
 
 - **Create complex reports** spanning multiple boards, items, and data points
 - **Perform batch operations** across many items simultaneously
-- **Integrate deeply** with Monday.com's advanced features like docs, workspaces, and activity logs
-- **Discover new capabilities** as Monday.com adds features to their API
+- **Integrate deeply** with monday.com's advanced features like docs, workspaces, and activity logs
+- **Discover new capabilities** as monday.com adds features to their API
 
 ### How to Enable
 
@@ -174,14 +171,14 @@ npx @mondaydotcomorg/monday-api-mcp -t your_token --enable-dynamic-api-tools
 
 | Argument | Flags | Description | Required | Default |
 |----------|-------|-------------|----------|---------|
-| Monday API Token | `--token`, `-t` | Monday.com API token | Yes | - |
-| API Version | `--version`, `-v` | Monday.com API version | No | `current` |
+| monday API Token | `--token`, `-t` | monday.com API token | Yes | - |
+| API Version | `--version`, `-v` | monday.com API version | No | `current` |
 | Read Only Mode | `--read-only`, `-ro` | Enable read-only mode | No | `false` |
 | Dynamic API Tools | `--enable-dynamic-api-tools`, `-edat` | Enable dynamic API tools | No | `false` |
 
 ## 🔐 Authentication & Security
 
-The server requires a Monday.com API token to authenticate with the Monday.com API. You can provide this token in two ways:
+The server requires a monday.com API token to authenticate with the monday.com API. You can provide this token in two ways:
 
 1. Command line argument: `-t your_monday_api_token`
 2. Environment variable: `monday_token=your_monday_api_token`
@@ -197,12 +194,12 @@ The server requires a Monday.com API token to authenticate with the Monday.com A
 Here are some examples of what you can build with our tools:
 
 ### 1. AI Assistant for Project Management
-- Create and manage tasks in Monday.com boards
+- Create and manage tasks in monday.com boards
 - Get updates on project status
 - Move items between groups as they progress
 
 ### 2. Data Analysis & Reporting
-- Extract data from Monday.com boards
+- Extract data from monday.com boards
 - Generate reports and insights
 - Create new boards for reporting
 
@@ -215,13 +212,13 @@ Here are some examples of what you can build with our tools:
 
 - **GitHub Issues**: For bug reports and feature requests
 - **Discussions**: For questions and community discussions
-- **[Monday.com Developer Documentation](https://developer.monday.com/api-reference/docs)**: Learn more about the Monday.com API
+- **[monday.com Developer Documentation](https://developer.monday.com/api-reference/docs)**: Learn more about the monday.com API
 
 ## 📚 Documentation
 
-- [Monday API MCP Documentation](./packages/monday-api-mcp/README.md)
+- [monday API MCP Documentation](./packages/monday-api-mcp/README.md)
 - [Agent Toolkit Documentation](./packages/agent-toolkit/README.md)
-- [Monday.com API Reference](https://developer.monday.com/api-reference/docs)
+- [monday.com API Reference](https://developer.monday.com/api-reference/docs)
 
 ## 📋 Prerequisites
 
@@ -229,7 +226,7 @@ Before using these tools, make sure you have:
 
 1. Node.js v20 or higher installed
 2. NPM v5.2.0 or higher installed
-3. A [Monday.com API token](https://developer.monday.com/api-reference/docs/authentication)
+3. A [monday.com API token](https://developer.monday.com/api-reference/docs/authentication)
 
 ## 🤝 Contributing
 
@@ -248,9 +245,9 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 ---
 
 <div align="center">
-  <p>Built with ❤️ by the Monday.com AI Team</p>
+  <p>Built with ❤️ by the monday.com AI Team</p>
   <p>
-    <a href="https://monday.com">Monday.com</a> |
+    <a href="https://monday.com">monday.com</a> |
     <a href="https://developer.monday.com">Developer Platform</a> |
     <a href="https://github.com/mondaycom/mcp">GitHub</a>
   </p>
