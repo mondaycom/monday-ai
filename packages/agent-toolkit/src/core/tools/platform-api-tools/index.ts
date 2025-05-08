@@ -1,5 +1,5 @@
 import { AllMondayApiTool } from './all-monday-api-tool';
-import { MondayApiToolType } from './base-monday-api-tool';
+import { BaseMondayApiToolConstructor } from './base-monday-api-tool';
 import { ChangeItemColumnValuesTool } from './change-item-column-values-tool';
 import { CreateBoardTool } from './create-board-tool';
 import { CreateColumnTool } from './create-column-tool';
@@ -17,7 +17,7 @@ import { GetTypeDetailsTool } from './get-type-details-tool';
 import { GetUsersTool } from './get-users-tool';
 import { MoveItemToGroupTool } from './move-item-to-group-tool';
 
-export const allGraphqlApiTools: MondayApiToolType[] = [
+export const allGraphqlApiTools: BaseMondayApiToolConstructor[] = [
   DeleteItemTool,
   GetBoardItemsTool,
   CreateItemTool,

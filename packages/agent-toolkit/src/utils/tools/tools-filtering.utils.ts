@@ -1,23 +1,22 @@
 import { ApiClient } from '@mondaydotcomorg/api';
 import { allGraphqlApiTools, allMondayAppsTools, Tool, ToolType } from 'src/core';
-import { ToolsConfiguration } from 'src/types';
-import { createToolInstance } from './initializing.utils';
+import { ToolsConfiguration } from '../../core/monday-agent-toolkit';
+import { toolFactory } from './initializing.utils';
 
-export const getFilteredTools = (
+export const getFilteredToolInstances = (
   instanceOptions: { apiClient: ApiClient; apiToken: string },
   config?: ToolsConfiguration,
-) => {
-  const allTools: Array<new (...args: any[]) => Tool<any, any>> = [...allGraphqlApiTools];
-  if (!config) {
-    return allTools;
+): Tool<any, any>[] => {
+  const allToolConstructors: Array<new (...args: any[]) => Tool<any, any>> = [...allGraphqlApiTools];
+  if (config?.enableMondayAppsTools) {
+    allToolConstructors.push(...allMondayAppsTools);
   }
+  const allToolInstances = allToolConstructors.map((ctor) => toolFactory(ctor, instanceOptions));
 
-  if (config.enableMondayAppsTools) {
-    allTools.push(...allMondayAppsTools);
-  }
-
-  return allTools.filter((tool) => {
-    const toolInstance = createToolInstance(tool, instanceOptions);
+  return allToolInstances.filter((toolInstance) => {
+    if (!config) {
+      return toolInstance.type !== ToolType.ALL_API;
+    }
     let shouldFilter = false;
     if (!config.enableDynamicApiTools) {
       shouldFilter = shouldFilter || toolInstance.type === ToolType.ALL_API;

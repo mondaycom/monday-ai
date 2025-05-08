@@ -1,2 +1,2 @@
-export { getFilteredTools } from './tools/tools-filtering.utils';
-export { createToolInstance } from './tools/initializing.utils';
+export { getFilteredToolInstances } from './tools/tools-filtering.utils';
+export { toolFactory } from './tools/initializing.utils';

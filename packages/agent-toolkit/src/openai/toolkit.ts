@@ -4,12 +4,11 @@ import type {
   ChatCompletionTool,
   ChatCompletionToolMessageParam,
 } from 'openai/resources';
-import { getFilteredTools } from 'src/utils/tools/tools-filtering.utils';
+import { getFilteredToolInstances } from '../utils/tools/tools-filtering.utils';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { Tool } from '../core/tool';
-import { createToolInstance } from '../utils';
-import { MondayAgentToolkitConfig } from 'src/types';
+import { MondayAgentToolkitConfig } from '../core/monday-agent-toolkit';
 
 export class MondayAgentToolkit {
   private readonly mondayApi: ApiClient;
@@ -37,14 +36,9 @@ export class MondayAgentToolkit {
       apiToken: this.mondayApiToken,
     };
 
-    const filteredTools = getFilteredTools(instanceOptions, config.toolsConfiguration);
+    const filteredToolInstances = getFilteredToolInstances(instanceOptions, config.toolsConfiguration);
 
-    for (const tool of filteredTools) {
-      const toolInstance = createToolInstance(tool, instanceOptions);
-      tools.push(toolInstance);
-    }
-
-    return tools;
+    return filteredToolInstances;
   }
 
   /**

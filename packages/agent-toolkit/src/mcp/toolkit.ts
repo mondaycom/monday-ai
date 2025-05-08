@@ -1,11 +1,10 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { CallToolResult } from '@modelcontextprotocol/sdk/types';
 import { ApiClient } from '@mondaydotcomorg/api';
-import { createToolInstance } from 'src/utils';
-import { getFilteredTools } from 'src/utils/tools/tools-filtering.utils';
+import { getFilteredToolInstances } from '../utils/tools/tools-filtering.utils';
 import { z } from 'zod';
 import { Tool } from '../core/tool';
-import { MondayAgentToolkitConfig } from 'src/types';
+import { MondayAgentToolkitConfig } from '../core/monday-agent-toolkit';
 
 /**
  * Monday Agent Toolkit providing an MCP server with Monday.com tools
@@ -52,7 +51,12 @@ export class MondayAgentToolkit extends McpServer {
    */
   private registerTools(config: MondayAgentToolkitConfig): void {
     try {
+      console.log('Initializing tools with config:', JSON.stringify(config.toolsConfiguration, null, 2));
       const toolInstances = this.initializeTools(config);
+      console.log(
+        'Initialized tools:',
+        toolInstances.map((t) => t.name),
+      );
 
       toolInstances.forEach((tool) => this.registerTool(tool));
     } catch (error) {
@@ -67,20 +71,14 @@ export class MondayAgentToolkit extends McpServer {
    * Initialize both API and CLI tools
    */
   private initializeTools(config: MondayAgentToolkitConfig): Tool<any, any>[] {
-    const tools: Tool<any, any>[] = [];
     const instanceOptions = {
       apiClient: this.mondayApiClient,
       apiToken: this.mondayApiToken,
     };
 
-    const filteredTools = getFilteredTools(instanceOptions, config.toolsConfiguration);
+    const filteredTools = getFilteredToolInstances(instanceOptions, config.toolsConfiguration);
 
-    for (const tool of filteredTools) {
-      const toolInstance = createToolInstance(tool, instanceOptions);
-      tools.push(toolInstance);
-    }
-
-    return tools;
+    return filteredTools;
   }
 
   /**
